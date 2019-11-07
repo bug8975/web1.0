@@ -1,0 +1,201 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>弦类系数设定-MonitorSys</title>
+<meta name="keywords" content="$!config.keywords" />
+<meta name="description" content="$!config.description" />
+<!--<link rel="shortcut icon" type="image/x-icon" href="$!webPath/resources/style/common/images/favicon.ico" />-->
+<link href="$!webPath/resources/style/common/css/public_hj.css"
+	rel="stylesheet" type="text/css" />
+<link href="$!webPath/resources/style/common/css/index_hj.css"
+	rel="stylesheet" type="text/css" />
+<link href="$!webPath/resources/css/user.css" type="text/css"
+	rel="stylesheet" />
+<link href="$!webPath/resources/css/jquery.datetimepicker.css"
+	type="text/css" rel="stylesheet" />
+<script type="text/javascript"
+	src="$!webPath/resources/js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="$!webPath/resources/js/public_hj.js"></script>
+<!-- <script src="$!webPath/resources/js/jquery-1.6.2.js"></script>
+	<script src="$!webPath/resources/js/jquery-ui-1.8.21.js"></script>-->
+<script src="$!webPath/resources/js/jquery.shop.common.js"></script>
+<script src="$!webPath/resources/js/jquery-1.10.2.js"></script>
+<script src="$!webPath/resources/js/jquery.datetimepicker.full.js"></script>
+<script>
+
+jQuery(document).ready(function(){
+    jQuery("#sensorTypeName").change(function(){
+        //var level=jQuery(this).attr("level");
+        var sensorTypeName=jQuery(this).val();
+        // alert("sensorTypeName:" + sensorTypeName);
+        if(sensorTypeName!=""){
+            jQuery.post("$!webPath/load_monitorline.htm",{"sensorTypeName":sensorTypeName},function(data){
+                jQuery("#monitorlineid").empty();
+                jQuery("#monitorlineid").append("<option value=''>请选择</option>");
+                jQuery.each(data, function(index,item){
+                    jQuery("#monitorlineid").append("<option value='"+item.id+"'>"+item.monitorLineName+"</option>");
+                    //jQuery("#sensor").show();
+                });
+                jQuery("#sensorid").empty();
+                jQuery("#sensorid").append("<option value=''>请选择</option>");
+            },"json");
+        }else{
+            //for(var i=level;i<=3;i++){
+                jQuery("#monitorlineid").empty();
+                jQuery("#monitorlineid").append("<option value=''>请选择类型</option>");
+                //jQuery("#sensor").hide();
+            //}
+        }
+    });
+});
+
+function updateMonitorDatas(){
+    var formString = "";
+    var i = 0;
+    #foreach($obj in $datas)
+        var calibratedValue = document.getElementById("$!{obj.id}_calibratedValue").value;
+        var frequency = document.getElementById("$!{obj.id}_frequency").value;
+        var fristFrequency = document.getElementById("$!{obj.id}_fristFrequency").value;
+
+        if(i != 0){
+            formString = formString + ";";
+        }
+        formString = formString + "$!{obj.monitorlineid}=$!{obj.sensorName},";
+        if(calibratedValue != ""){
+            formString = formString + calibratedValue;
+        }
+        if(frequency != ""){
+            formString = formString + "," + frequency;
+        }
+        if(fristFrequency != ""){
+            formString = formString + "," + fristFrequency;
+        }
+        i++;
+    #end
+    //alert(formString);
+    if(formString != ""){
+        jQuery.post("$!webPath/deviceapp/axialForceMondify.htm",{"formString":formString},function(resultString){
+            var index = resultString.indexOf("errorcode:1");
+            if(index != -1){ // not login
+                alert("请登录!");
+                var url="$!webPath";
+                window.location.href=url;
+            } else {
+                alert(resultString);
+            }
+        },"text");
+    }
+    
+}
+</script>
+
+<style type="text/css">
+* {
+	margin: 0px;
+	padding: 0px;
+}
+
+.loadingShade {
+	width: 100%;
+	height: 100%;
+	background-color: #000;
+	filter: alpha(opacity = 50);
+	-moz-opacity: 0.5;
+	opacity: 0.1;
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	display: none;
+	z-index: 1000;
+}
+
+.loadingInfo {
+	width: auto;
+	height: 57px;
+	line-height: 57px;
+	position: absolute;
+	top: 200px;
+	left: 50%;
+	position: fixed;
+	padding-left: 50px;
+	padding-right: 5px;
+	background: #fff url($!webPath/resources/images/loading.gif) no-repeat
+		scroll 5px 10px;
+	display: none;
+	z-index: 1500;
+}
+</style>
+</head>
+<body class="info">
+	$!httpInclude.include("/common/top.htm")
+	<div class="main_bj"></div>
+	<div class="main">
+		<div class="loadingShade" id="loadingShade"></div>
+		<div class="loadingInfo" id="loadingInfo">数据存储中...</div>
+		$!httpInclude.include("/common/head.htm")
+		<table width="100%" border="0" cellspacing="0" cellpadding="0"
+			class="user_table">
+			<tr>
+				$!httpInclude.include("/common/menu_nav.htm?op=axialForceCoefficient")
+				<td id="centerbg" valign="top">
+					<div class="productmain">
+						<div class="ordercon">
+							<form method="post" name="ListForm" id="ListForm">
+								<div class="ordersear">
+									<span>传感器类型:</span> <span class="ordersel"> <select
+										name="sensorTypeName" id="sensorTypeName">
+											<option value="" selected="selected">请选择</option>
+											#foreach($sensorType in $sensorTypes)
+											<option value="$!sensorType.name"
+												#if($!sensorTypeName==$!sensorType.name) selected="selected"
+												#end>$!sensorType.displayName</option> #end
+									</select>
+									</span> <span>&nbsp;&nbsp;&nbsp;监测线:</span> <span class="ordersel">
+										<select name="monitorlineid" id="monitorlineid">
+											<option value="" selected="selected">请选择</option>
+											#foreach($monitorline in $monitorLines)
+											<option value="$!monitorline.id"
+												#if($!monitorlineid==$!monitorline.id) selected="selected"
+												#end>$!monitorline.name</option> #end
+									</select>
+									</span> 
+									<span class="orderbtn">
+                                        <input name="" type="submit" value="查询" style="cursor:pointer;"/>
+                                    </span>
+								</div>
+								<div class="operation">
+									<table width="100%" border="0" cellspacing="0" cellpadding="0"
+										id="opertable">
+										<tr id="opertitle">
+											<td width="25%"><b>传感器名称</b></td>
+											<td width="25%"><b>标定系数</b></td>
+											<td width="25%" style="display:none"><b>出厂频率</b></td>
+											<td width="25%"><b>第一次测量频率</b></td>
+										</tr>
+										#foreach($obj in $datas)
+										<tr>
+                                            <td>$!obj.sensorName</td>
+                                            <td><input type="text" name="$!{obj.id}_calibratedValue" id="$!{obj.id}_calibratedValue" value="$!{obj.calibratedValue}"/></td>
+                                            <td style="display:none"><input type="text" name="$!{obj.id}_frequency" id="$!{obj.id}_frequency" value="$!{obj.frequency}"/></td>
+                                            <td><input type="text" name="$!{obj.id}_fristFrequency" id="$!{obj.id}_fristFrequency" value="$!{obj.fristFrequency}"/></td>
+                                        </tr>
+										#end
+									</table>
+								</div>
+								#if($!datas)
+								<span class="orderbtn" style="margin-top:15px;width: 58%; float: right">
+									<input name="update" type=button value="保存"
+									style="cursor: pointer;" onclick="updateMonitorDatas()" />
+								</span> #end
+							</form>
+						</div>
+					</div>
+				</td>
+			</tr>
+		</table>
+		<div class="footer">$!httpInclude.include("/common/bottom.htm")
+		</div>
+	</div>
+</body>
+</html>

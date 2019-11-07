@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>登录-MonitorSys</title>
+<meta name="keywords" content="$!config.keywords" />
+<meta name="description" content="$!config.description" />
+<link href="$!webPath/resources/css/login.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="$!webPath/resources/js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="$!webPath/resources/js/public_hj.js"></script>
+<script type="text/javascript" src="$!webPath/resources/js/jquery-1.6.2.js"></script>
+<script type="text/javascript" src="$!webPath/resources/js/jquery.validate.min.js"></script>
+<script>
+        function commitForm(method) {
+        	var userName = document.getElementById("usernameMonitor").value;
+        	var password = document.getElementById("passwordMonitor").value;
+        	if(userName == null || userName == "" || password == null || password == "") {
+            	alert("用户名和密码不能为空!");
+            	return;
+            }
+            jQuery("#theForm").submit();
+        }
+</script>
+</head>
+<body>
+	<div class="wrapper">
+		<h1>&nbsp;</h1>
+		<h2>&nbsp;</h2>
+		<div class="content">
+			<div id="form_wrapper" class="form_wrapper">
+				<form class="login active" method="post" name="theForm" id="theForm" action="$!webPath/loginFinish.htm">
+					<h3>自动化监测平台</h3>
+					<span class="error">$!{errorString}</span>
+					<div>
+						<label>用户名:</label> <input type="text" name="usernameMonitor" id="usernameMonitor"/> 
+					</div>
+					<div>
+						<label>密 码:</label> <input type="password" name="passwordMonitor" id="passwordMonitor"/>
+					</div>
+					<div class="bottom">
+						<a href="">
+							<input type="submit" value="登  录"  onclick="commitForm();"/>
+						</a>
+						<div class="clear"></div>
+					</div>
+				</form>
+			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+
+
+</body>
+</html>

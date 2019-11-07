@@ -1,0 +1,202 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>定时设置-MonitorSys</title>
+<meta name="keywords" content="$!config.keywords" />
+<meta name="description" content="$!config.description" />
+<link href="$!webPath/resources/style/common/css/public_hj.css"
+	rel="stylesheet" type="text/css" />
+<link href="$!webPath/resources/style/common/css/index_hj.css"
+	rel="stylesheet" type="text/css" />
+<link
+	href="$!webPath/resources/style/common/css/jquery-ui-1.8.22.custom.css"
+	type="text/css" rel="stylesheet" />
+<link href="$!webPath/resources/css/user.css" type="text/css"
+	rel="stylesheet" />
+
+<script type="text/javascript"
+	src="$!webPath/resources/js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="$!webPath/resources/js/public_hj.js"></script>
+<script src="$!webPath/resources/js/jquery-1.6.2.js"></script>
+<script src="$!webPath/resources/js/jquery-ui-1.8.21.js"></script>
+<script src="$!webPath/resources/js/jquery.shop.common.js"></script>
+<script src="$!webPath/resources/js/highstock.js"></script>
+<script src="$!webPath/resources/js/exporting.js"></script>
+<script>
+jQuery(document).ready(function(){
+    jQuery("#hourSegment").change(function(){
+        //var level=jQuery(this).attr("level");
+        var hour=jQuery(this).val();
+        // alert("sensorTypeName:" + sensorTypeName);
+        if(hour!=""){
+            $("#minuteSegment").attr("disabled","disabled");
+            $("#secondSegment").attr("disabled","disabled");
+        }else{
+            $("#minuteSegment").removeAttr("disabled");
+            $("#secondSegment").removeAttr("disabled");
+        }
+    });
+    jQuery("#minuteSegment").change(function(){
+        //var level=jQuery(this).attr("level");
+        var minute=jQuery(this).val();
+        // alert("sensorTypeName:" + sensorTypeName);
+        if(minute!=""){
+            $("#hourSegment").attr("disabled","disabled");
+            $("#secondSegment").attr("disabled","disabled");
+        }else{
+            $("#hourSegment").removeAttr("disabled");
+            $("#secondSegment").removeAttr("disabled");
+        }
+    });
+    jQuery("#secondSegment").change(function(){
+        //var level=jQuery(this).attr("level");
+        var second=jQuery(this).val();
+        // alert("sensorTypeName:" + sensorTypeName);
+        if(second!=""){
+            $("#hourSegment").attr("disabled","disabled");
+            $("#minuteSegment").attr("disabled","disabled");
+        }else{
+            $("#hourSegment").removeAttr("disabled");
+            $("#minuteSegment").removeAttr("disabled");
+        }
+    });
+});
+function changeTimer(){
+    var hour = jQuery("#hourSegment").val();
+    var minute = jQuery("#minuteSegment").val();
+    var second = jQuery("#secondSegment").val();
+    var d = new Date();
+    var strTime = null;
+    if(hour != ""){
+    	strTime = d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate() + " " + hour + ":00:00"; 
+    }else if(minute != ""){
+    	strTime = d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate() + " 00:" + minute + ":00"; 
+    }else if(second != ""){
+    	strTime = d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate() + " 00:00:" + second; 
+    }else{
+    	alert("请选择时间间隔");
+    }
+    if(strTime != null){
+    	alert(strTime);
+        jQuery.post("$!webPath/deviceapp/modifyTime.htm",{"time":strTime},function(resultString){
+             alert(resultString);
+             location.href = "$!webPath/deviceapp/timermodify.htm";
+        },"text");
+    }
+}
+
+
+</script>
+</head>
+<body class="info">
+	$!httpInclude.include("/common/top.htm")
+	<div class="main_bj"></div>
+	<div class="main">
+		$!httpInclude.include("/common/head.htm")
+		<table width="100%" border="0" cellspacing="0" cellpadding="0"
+			class="user_table">
+
+			<tr>
+				$!httpInclude.include("/common/menu_nav.htm?op=timermodify")
+				<td id="centerbg" valign="top">
+					<div class="productmain">
+						<div class="ordercon">
+							<form method="post" name="ListForm" id="ListForm">
+								<div class="ordersear">
+									<span>定时任务间隔修改：</span>
+									<span style="float:right;padding-right:50px">
+									#if($!hour!="00")
+									           当前间隔:<a style="font-size:20px;color:blue"> $!hour</a>小时
+									#else 
+									   #if($!minute!="00")
+									                    当前间隔:<a style="font-size:20px;color:blue"> $!minute</a>分钟
+									   #else
+									       #if($!second!="00")
+									                                   当前间隔:<a style="font-size:20px;color:blue"> $!second</a>秒
+									       #else
+									       #end
+                                       #end
+                                    #end
+                                    </span>
+								</div>
+								<div class="operation">
+									<table width="100%" border="0" cellspacing="0" cellpadding="0"
+										id="opertable">
+										<tr id="opertitle">
+										    <!-- <td width="15%"><b>年</b></td>
+                                            <td width="14%"><b>月</b></td>
+                                            <td width="14%"><b>日</b></td> -->
+											<td width="14%"><b>小时</b></td>
+											<td width="14%"><b>分</b></td>
+											<td width="14%"><b>秒</b></td>
+											<td width="15%"><b>设置状态</b></td>
+										</tr>
+										<tr>
+										   <!--  <td width="14%">
+                                                <select>
+                                                    <option value="">$!year</option>
+                                                </select>
+                                            </td>
+                                            <td width="14%">
+                                                <select>
+                                                    <option value="">$!month</option>
+                                                </select>
+                                            </td>
+                                            <td width="14%">
+                                                <select>
+                                                    <option value="">$!day</option>
+                                                </select>
+                                            </td> -->
+                                            <td width="14%">
+                                                <select name="hourSegment" id="hourSegment">
+                                                    <option value="" #if($!hourSegment==0) selected="selected" #end>0</option>
+						                            <option value="1" #if($!hourSegment==1) selected="selected" #end>1</option>
+						                            <option value="2" #if($!hourSegment==2) selected="selected" #end>2</option>
+						                            <option value="3" #if($!hourSegment==3) selected="selected" #end>3</option>
+						                            <option value="4" #if($!hourSegment==4) selected="selected" #end>4</option>
+						                            <option value="6" #if($!hourSegment==6) selected="selected" #end>6</option>
+						                            <option value="8" #if($!hourSegment==8) selected="selected" #end>8</option>
+						                            <option value="12" #if($!hourSegment==12) selected="selected" #end>12</option>
+                                                </select>
+                                            </td>
+                                            <td width="14%">
+                                                <select name="minuteSegment" id="minuteSegment">
+                                                    <option value="" #if($!hourSegment==0) selected="selected" #end>0</option>
+                                                    <option value="10" #if($!minuteSegment==10) selected="selected" #end>10</option>
+                                                    <option value="20" #if($!minuteSegment==20) selected="selected" #end>20</option>
+                                                    <option value="30" #if($!minuteSegment==30) selected="selected" #end>30</option>
+                                                </select>
+                                            </td>
+                                            <td width="14%">
+                                                <select name="secondSegment" id="secondSegment">
+                                                    <option value="" #if($!hourSegment==0) selected="selected" #end>0</option>
+                                                    <option value="10" #if($!secondSegment==10) selected="selected" #end>10</option>
+                                                    <option value="20" #if($!secondSegment==20) selected="selected" #end>20</option>
+                                                    <option value="30" #if($!secondSegment==30) selected="selected" #end>30</option>
+                                                </select>
+                                            </td>
+                                            <td width="15%">
+                                                <span class="orderbtn" style="width:100%;float:right">
+                                                    <input name="updateButton" id="setTimer" type="button" value="设置"  onclick="changeTimer()"/>
+			                                    </span>
+                                            </td>
+										</tr>
+									</table>
+								</div>
+							</form>
+						</div>
+					</div>
+					<!-- div-productmain END -->
+				</td>
+			</tr>
+		</table>
+		<div class="footer">$!httpInclude.include("/common/bottom.htm")
+		</div>
+	</div>
+
+	<script type="text/javascript">
+    jQuery(".notice").slide({ titCell:".tab-hd li", mainCell:".tab-bd",delayTime:0 });
+</script>
+</body>
+</html>

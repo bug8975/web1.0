@@ -1,0 +1,235 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>检测数据-MonitorSys</title>
+	<meta name="keywords" content="$!config.keywords" />
+	<meta name="description" content="$!config.description" /><!--<link rel="shortcut icon" type="image/x-icon" href="$!webPath/resources/style/common/images/favicon.ico" />-->
+	<link href="$!webPath/resources/style/common/css/public_hj.css" rel="stylesheet" type="text/css" />
+	<link href="$!webPath/resources/style/common/css/index_hj.css" rel="stylesheet" type="text/css" />
+	<link href="$!webPath/resources/css/user.css" type="text/css" rel="stylesheet" />
+	<script type="text/javascript" src="$!webPath/resources/js/jquery-1.7.2.min.js"></script>
+	<script type="text/javascript" src="$!webPath/resources/js/public_hj.js"></script>
+	<script src="$!webPath/resources/js/jquery-1.6.2.js"></script>
+	<script src="$!webPath/resources/js/jquery-ui-1.8.21.js"></script>
+	<script src="$!webPath/resources/js/jquery.shop.common.js"></script>
+	<script>
+    jQuery(document).ready(function(){
+        jQuery("#sensorTypeName").change(function(){
+            //var level=jQuery(this).attr("level");
+            var sensorTypeName=jQuery(this).val();
+            // alert("sensorTypeName:" + sensorTypeName);
+            if(sensorTypeName!=""){
+                jQuery.post("$!webPath/load_monitorline.htm",{"sensorTypeName":sensorTypeName},function(data){
+                    jQuery("#monitorlineid").empty();
+                    jQuery("#monitorlineid").append("<option value=''>请选择</option>");
+                    jQuery.each(data, function(index,item){
+                        jQuery("#monitorlineid").append("<option value='"+item.id+"'>"+item.monitorLineName+"</option>");
+                        //jQuery("#sensor").show();
+                    });
+                    jQuery("#sensorid").empty();
+                    jQuery("#sensorid").append("<option value=''>请选择</option>");
+                },"json");
+            }else{
+                //for(var i=level;i<=3;i++){
+                    jQuery("#monitorlineid").empty();
+                    jQuery("#monitorlineid").append("<option value=''>请选择类型</option>");
+                    //jQuery("#sensor").hide();
+                //}
+            }
+        });
+
+        jQuery("#monitorlineid").change(function(){
+            //var level=jQuery(this).attr("level");
+            var id=jQuery(this).val();
+            if(id!=""){
+                jQuery.post("$!webPath/load_sensor.htm",{"pid":id},function(data){
+                    jQuery("#sensorid").empty();
+                    jQuery("#sensorid").append("<option value=''>请选择</option>");
+                    jQuery.each(data, function(index,item){
+                        jQuery("#sensorid").append("<option value='"+item.id+"'>"+item.sensorName+"</option>");
+                        //jQuery("#sensor").show();
+                    });
+                },"json");
+            }else{
+                //for(var i=level;i<=3;i++){
+                    jQuery("#sensorid").empty();
+                    jQuery("#sensorid").append("<option value=''>请选择监测线</option>");
+                    //jQuery("#sensor").hide();
+                //}
+            }
+        });
+    });
+        
+	function dateFormat(timeMs, format){
+	    var t = new Date(timeMs);
+	    var tf = function(i){return (i < 10 ? '0' : '') + i};
+	    return format.replace(/yyyy|MM|dd|HH|mm|ss/g, function(a){
+	        switch(a){
+	            case 'yyyy':
+	                return tf(t.getFullYear());
+	                break;
+	            case 'MM':
+	                return tf(t.getMonth() + 1);
+	                break;
+	            case 'mm':
+	                return tf(t.getMinutes());
+	                break;
+	            case 'dd':
+	                return tf(t.getDate());
+	                break;
+	            case 'HH':
+	                return tf(t.getHours());
+	                break;
+	            case 'ss':
+	                return tf(t.getSeconds());
+	                break;
+	        }
+	    })
+	}
+	
+	window.onload=function(){
+		var format = "yyyy-MM-dd HH:mm:ss";
+    	#foreach($obj in $objs)
+	    	var t1 = document.getElementById("$!{obj.name}_td");
+	    	t1.innerHTML = #if($!{obj.lastCollectingTime}==0) '-' #else dateFormat($!{obj.lastCollectingTime}, format) #end ;
+		#end
+	}
+
+	function myrefresh()
+	{
+		//alert("refresh now");
+	   window.location.reload();
+	}
+	setTimeout('myrefresh()',60000); //指定60秒刷新一次
+	</script>
+</head>
+<body class="info">
+$!httpInclude.include("/common/top.htm")
+<div class="main_bj"></div>
+<div class="main">
+    $!httpInclude.include("/common/head.htm")
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="user_table">
+
+    <tr> $!httpInclude.include("/common/menu_nav.htm?op=monitordatalist")
+        <td id="centerbg" valign="top">
+        <div class="productmain">
+        	<!--
+            <div class="ordernav">
+              <ul class="orderul">
+                <li class="this"><a href="$!webPath/monitorsys/report.htm">列表</a></li>
+              </ul>
+            </div>
+            -->
+            <div class="ordercon">
+              <form method="post" name="ListForm" id="ListForm">
+                <div class="ordersear">
+                    <span>传感器类型:</span> 
+					<span class="ordersel">
+                  		<select name="sensorTypeName" id="sensorTypeName">
+                  			<option value="" selected="selected">请选择</option>
+		                  	#foreach($sensorType in $sensorTypes)
+		                  	<option value="$!sensorType.name"  #if($!sensorTypeName==$!sensorType.name) selected="selected" #end>$!sensorType.displayName</option>
+		                  	#end
+                  		</select>
+                	</span>
+                    <span>&nbsp;&nbsp;&nbsp;监测线:</span> 
+					<span class="ordersel">
+                  		<select name="monitorlineid" id="monitorlineid">
+                  			<option value="" selected="selected">请选择</option>
+		                  	#foreach($monitorline in $monitorLines)
+		                  	<option value="$!monitorline.id"  #if($!monitorlineid==$!monitorline.id) selected="selected" #end>$!monitorline.name</option>
+		                  	#end
+                  		</select>
+                	</span>
+                	<span>&nbsp;&nbsp;&nbsp;传感器:</span> 
+					<span class="ordersel">
+                  		<select name="sensorid" id="sensorid">
+                  		    <option value="" selected="selected">请选择</option>
+		                  	#foreach($sensor in $sensors)
+		                  	<option value="$!sensor.id" #if($!sensorid==$!sensor.id) selected="selected" #end>$!sensor.name</option>
+		                  	#end
+                  		</select>
+                	</span>
+                	<span>&nbsp;&nbsp;&nbsp;预警状态:</span> 
+					<span class="ordersel">
+                  		<select name="alarmlevel" id="alarmlevel">
+                  		    <option value="">请选择</option>
+                  		    <option value="0" #if(0==$!alarmlevel) selected="selected" #end>正常</option>
+                  			<option value="1" #if(1==$!alarmlevel) selected="selected" #end>1级预警</option>
+                  			<option value="2" #if(2==$!alarmlevel) selected="selected" #end>2级预警</option>
+                  			<option value="3" #if(3==$!alarmlevel) selected="selected" #end>3级预警</option>
+                  		</select>
+                	</span>
+                  	<span class="orderbtn">
+                  		<input name="" type="submit" value="查询" style="cursor:pointer;"/>
+                  	</span>
+                </div>
+
+                <div class="operation">
+                  <table width="100%" border="0" cellspacing="0" cellpadding="0" id="opertable" >
+                    <tr id="opertitle">
+                      <td width="15%"><b>传感器类型</b></td>
+                      <td width="10%"><b>传感器名称</b></td>
+                      <td width="20%"><b>采集时间</b></td>
+                      <td width="12%"><b>监测点读数/X(°)</b></td>
+                      <td width="12%"><b>即时形变/Y(°)</b></td>
+                      <td width="12%"><b>累计形变/Z(°)</b></td>
+                      <td width="8%"><b>单位</b></td>
+                      <td width="8%"><b>预警状态</b></td>
+                    </tr>
+				  #foreach($obj in $objs)
+					#if($!obj.name=="G1-01-01" || $!obj.name=="G1-01-02" || $!obj.name=="G1-01-03"  || $!obj.name=="G1-01-04"  || $!obj.name=="G1-01-05"   || $!obj.name=="G1-01-06"   || $!obj.name=="G1-01-07"  || $!obj.name=="G1-01-08"  || $!obj.name=="G1-01-09"  || $!obj.name=="G1-01-10" || $!obj.name=="G1-01-11" || $!obj.name=="G1-01-12" || $!obj.name=="G1-01-13"  || $!obj.name=="G1-01-14"  || $!obj.name=="G1-01-15"   || $!obj.name=="G1-01-16"   || $!obj.name=="G1-01-17"  || $!obj.name=="G1-01-18"  || $!obj.name=="G1-01-19") 
+					#else
+				    <tr>
+				      <td>
+                       	$!SensorTypes.get($!obj.sensorType)
+				      </td>
+                      <td>$!{obj.name}</td>
+                      <td id="$!{obj.name}_td"></td>
+                      <td>#if($!{obj.lastCollectingTime}==0) - #else $!{obj.lastDeviceData} #end</td>
+                      <td>#if($!obj.base) 基准点 #else #if($!{obj.lastCollectingTime}==0) - #else $!{obj.lastSinkingData} #end #end</td>
+                      <td>#if($!obj.base) 基准点 #else #if($!{obj.lastCollectingTime}==0) - #else $!{obj.lastSinkingAccumulation} #end #end </td>
+                      <td>$!SensorUnits.get($!obj.sensorType) </td>
+                      <td>
+                      	#if($!obj.base) 基准点 
+                      	#else 
+	                      	#if($!{obj.alarmLevel}==0) 正常 #end 
+	                      	#if($!{obj.alarmLevel}==1) <span style="background:blue">&nbsp;&nbsp;&nbsp;&nbsp;</span>一级预警 #end
+	                      	#if($!{obj.alarmLevel}==2) <span style="background:yellow">&nbsp;&nbsp;&nbsp;&nbsp;</span>二级预警 #end 
+	                      	#if($!{obj.alarmLevel}==3) <span style="background:red">&nbsp;&nbsp;&nbsp;&nbsp;</span>三级预警 #end
+                      	#end
+                      </td>
+                    </tr>
+				  #end
+				  #end
+
+                  </table>
+                </div>
+                <div class="alldel">
+                  <div  class="userfenye">
+                    <input name="currentPage" type="hidden" id="currentPage" value="$!currentPage" />
+                  $!gotoPageFormHTML</div>
+                </div>
+              </form>
+            </div>
+          </div></td>
+      </tr>
+    </table>
+    <div class="footer">
+    $!httpInclude.include("/common/bottom.htm")
+	</div>
+  </div>
+
+<!--返回最顶部-->
+<!--
+<div class="back_box"  style=" display:none;width:50px; height:50px;position:fixed; bottom:180px; right:25px;">
+    <div class="back_index"><a href="./index.htm"  title="返回主页"></a></div>
+    <div class="back_top"><a id="toTop" href="#" bosszone="hometop" style="display: block;" onclick="window.scrollTo(0,0);return false" title="返回顶部" target="_self" ></a></div>
+</div>
+-->
+<script type="text/javascript">
+    jQuery(".notice").slide({ titCell:".tab-hd li", mainCell:".tab-bd",delayTime:0 });
+</script>
+</body>
+</html>

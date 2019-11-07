@@ -1,0 +1,282 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>修改密码-MonitorSys</title>
+<meta name="keywords" content="$!config.keywords" />
+<meta name="description" content="$!config.description" />
+<link href="$!webPath/resources/style/common/css/public_hj.css"
+	rel="stylesheet" type="text/css" />
+<link href="$!webPath/resources/style/common/css/index_hj.css"
+	rel="stylesheet" type="text/css" />
+<link href="$!webPath/resources/style/common/css/jquery-ui-1.8.22.custom.css" type="text/css" rel="stylesheet" />
+<link href="$!webPath/resources/css/user.css"
+	type="text/css" rel="stylesheet" />
+
+<script type="text/javascript"
+	src="$!webPath/resources/js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="$!webPath/resources/js/public_hj.js"></script>
+<script src="$!webPath/resources/js/jquery-1.6.2.js"></script>
+<script src="$!webPath/resources/js/jquery-ui-1.8.21.js"></script>
+<script src="$!webPath/resources/js/jquery.shop.common.js"></script>
+<script src="$!webPath/resources/js/highstock.js"></script>
+<script src="$!webPath/resources/js/exporting.js"></script>
+<script>
+
+jQuery(document).ready(function(){
+  jQuery('#beginTime').datepicker({
+	  dateFormat:"yy-mm-dd",
+	  changeMonth: true,
+	  changeYear: true,
+	  monthNamesShort: ['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+      dayNamesMin: ['日','一','二','三','四','五','六']
+  });
+  jQuery('#endTime').datepicker({
+	  dateFormat:"yy-mm-dd",
+	  changeMonth: true,
+	  changeYear: true,
+	  monthNamesShort: ['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+      dayNamesMin: ['日','一','二','三','四','五','六']
+  });
+  jQuery("#sensormonitorlineid").change(function(){
+	    //var level=jQuery(this).attr("level");
+	    var id=jQuery(this).val();
+	    if(id!=""){
+	        jQuery.post("$!webPath/load_sensor.htm",{"pid":id},function(data){
+	            jQuery("#sensorid").empty();
+	            jQuery("#sensorid").append("<option value=''>请选择</option>");
+	            jQuery.each(data, function(index,item){
+	                jQuery("#sensorid").append("<option value='"+item.id+"'>"+item.sensorName+"</option>");
+	                //jQuery("#sensor").show();
+	            });
+	        }, "json");
+	    }else{
+	        //for(var i=level;i<=3;i++){
+	            jQuery("#sensorid").empty();
+	            jQuery("#sensorid").append("<option value=''>请选择</option>");
+	            //jQuery("#sensor").hide();
+	        //}
+	    }
+	});
+});
+
+
+function getSensorExcelReport(){
+	var sensoridString=jQuery("#sensorid").val();
+	var monitorlineidString=jQuery("#sensormonitorlineid").val();
+	var beginTime=jQuery("#beginTime").val();
+	var endTime=jQuery("#endTime").val();
+
+	if(beginTime == "" || endTime == ""){
+		alert("请选择时间!");
+		return;
+	}
+
+	//var beginTimeArray = /^(\d{4})-(\d{1,2})-(\d{1,2}) (\d{1,2}):(\d{1,2}):(\d{1,2})$/.exec(s);
+	var beginTimeArray = /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(beginTime);
+	var endTimeArray = /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(endTime);
+	var beginTimeDate = new Date(parseInt(beginTimeArray[1], 10),
+		parseInt(beginTimeArray[2], 10)-1,
+	    parseInt(beginTimeArray[3], 10));
+	var endTimeDate = new Date(parseInt(endTimeArray[1], 10),
+			parseInt(endTimeArray[2], 10)-1,
+		    parseInt(endTimeArray[3], 10));
+	//alert(beginTimeDate + "=="+ endTimeDate);
+	if(beginTimeDate > endTimeDate){
+		alert("结束时间必须大于开始时间!");
+		return;
+	}
+	var dtNew=new Date(beginTimeDate.getTime()+31*24*60*60*1000);
+	if(endTimeDate > dtNew){
+		alert("时间段必须在一个月内!");
+		return;
+	}
+	if(monitorlineidString == ""){
+		alert("请选择监测线和传感器!");
+		return;
+	}
+	if(sensoridString == ""){
+		alert("请选择传感器!");
+		return;
+	}
+
+	var url="$!webPath/picreport/sensorreport.htm?sensorid="+sensoridString+"&beginTime="+beginTime+"&endTime="+endTime;
+    var windowInstance = window.open(url);
+}
+
+function getMonitorLineExcelReport(){
+	var monitorlineidString=jQuery("#monitorlineidforlinereport").val();
+	var beginTime=jQuery("#beginTime").val();
+	var endTime=jQuery("#endTime").val();
+
+	if(beginTime == "" || endTime == ""){
+		alert("请选择时间!");
+		return;
+	}
+
+	//var beginTimeArray = /^(\d{4})-(\d{1,2})-(\d{1,2}) (\d{1,2}):(\d{1,2}):(\d{1,2})$/.exec(s);
+	var beginTimeArray = /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(beginTime);
+	var endTimeArray = /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(endTime);
+	var beginTimeDate = new Date(parseInt(beginTimeArray[1], 10),
+		parseInt(beginTimeArray[2], 10)-1,
+	    parseInt(beginTimeArray[3], 10));
+	var endTimeDate = new Date(parseInt(endTimeArray[1], 10),
+			parseInt(endTimeArray[2], 10)-1,
+		    parseInt(endTimeArray[3], 10));
+	//alert(beginTimeDate + "=="+ endTimeDate);
+	if(beginTimeDate > endTimeDate){
+		alert("结束时间必须大于开始时间!");
+		return;
+	}
+	var dtNew=new Date(beginTimeDate.getTime()+31*24*60*60*1000);
+	if(endTimeDate > dtNew){
+		alert("时间段必须在一个月内!");
+		return;
+	}
+
+	if(monitorlineidString == ""){
+		alert("请选择监测线!");
+		return;
+	}
+
+	var url="$!webPath/picreport/monitorlinereport.htm?monitorlineid="+monitorlineidString+"&beginTime="+beginTime+"&endTime="+endTime;
+    var windowInstance = window.open(url);
+}
+
+function getSinkingOffsetStatExcelReport(){
+	var beginTime=jQuery("#beginTime").val();
+	var endTime=jQuery("#endTime").val();
+
+	if(beginTime == "" || endTime == ""){
+		alert("请选择时间!");
+		return;
+	}
+
+	//var beginTimeArray = /^(\d{4})-(\d{1,2})-(\d{1,2}) (\d{1,2}):(\d{1,2}):(\d{1,2})$/.exec(s);
+	var beginTimeArray = /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(beginTime);
+	var endTimeArray = /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(endTime);
+	var beginTimeDate = new Date(parseInt(beginTimeArray[1], 10),
+		parseInt(beginTimeArray[2], 10)-1,
+	    parseInt(beginTimeArray[3], 10));
+	var endTimeDate = new Date(parseInt(endTimeArray[1], 10),
+			parseInt(endTimeArray[2], 10)-1,
+		    parseInt(endTimeArray[3], 10));
+	//alert(beginTimeDate + "=="+ endTimeDate);
+	if(beginTimeDate > endTimeDate){
+		alert("结束时间必须大于开始时间!");
+		return;
+	}
+	var dtNew=new Date(beginTimeDate.getTime()+31*24*60*60*1000);
+	if(endTimeDate > dtNew){
+		alert("时间段必须在一个月内!");
+		return;
+	}
+
+	var url="$!webPath/picreport/sinkingstatisticreport.htm?beginTime="+beginTime+"&endTime="+endTime;
+    var windowInstance = window.open(url);
+}
+</script>
+
+
+</head>
+<body class="info">
+	$!httpInclude.include("/common/top.htm")
+	<div class="main_bj"></div>
+	<div class="main">
+		$!httpInclude.include("/common/head.htm")
+		<table width="100%" border="0" cellspacing="0" cellpadding="0"
+			class="user_table">
+
+			<tr>
+				$!httpInclude.include("/common/menu_nav.htm?op=modifypwd")
+				<td id="centerbg" valign="top">
+					<div class="productmain">
+						<div class="ordercon">
+							<br/>&nbsp;&nbsp;注意：请先选择时间段，再选择具体报表;<br/><br/><br/>
+							<div style="width:900px;">
+							<span style="width:700px;float:right">
+								<span>时间段:</span> 
+								<span class="ordersel">
+			                  		<input name="beginTime" type="text" id="beginTime" value="$!beginTime" readonly="readonly"/>
+			                	</span>
+			                	<span>-</span> 
+								<span class="ordersel">
+			                  		<input name="endTime" type="text" id="endTime" value="$!endTime" readonly="readonly" />
+			                	</span>
+			                	<br/>&nbsp;<br/>
+			                	
+								<fieldset style="width:65%;text-align:center;">
+									<legend>单个传感器报表</legend>
+									<br/>
+									<label>监测线:
+				                  		<select name="sensormonitorlineid" id="sensormonitorlineid">
+				                  			<option value="" selected="selected">请选择</option>
+						                  	#foreach($monitorline in $monitorLines)
+						                  	<option value="$!monitorline.id"  #if($!sensormonitorlineid==$!monitorline.id) selected="selected" #end>$!monitorline.name</option>
+						                  	#end
+				                  		</select>
+									</label>&nbsp;&nbsp;
+									<label>传感器:
+				                  		<select name="sensorid" id="sensorid">
+				                  		    <option value="" selected="selected">请选择</option>
+						                  	#foreach($sensor in $sensors)
+						                  	<option value="$!sensor.id" #if($!sensorid==$!sensor.id) selected="selected" #end>$!sensor.name</option>
+						                  	#end
+				                  		</select>
+									</label>
+				                  	<span class="orderbtn">
+				                  		&nbsp;&nbsp;&nbsp;
+                  						<input name="" type="button" value="报表" style="cursor:pointer;" onclick="getSensorExcelReport()"/>
+                  					</span>
+									<br/>&nbsp;
+								</fieldset>
+								
+			                	<br/>&nbsp;<br/>
+								<fieldset style="width:65%;text-align:center;">
+									<legend>监测线报表</legend>
+									<br/>
+									<label>监测线:
+				                  		<select name="monitorlineidforlinereport" id="monitorlineidforlinereport">
+				                  			<option value="" selected="selected">请选择</option>
+						                  	#foreach($monitorline in $monitorLines)
+						                  	<option value="$!monitorline.id"  #if($!monitorlineidforlinereport==$!monitorline.id) selected="selected" #end>$!monitorline.name</option>
+						                  	#end
+				                  		</select>
+									</label>
+									<label>
+				                  		<span class="orderbtn">
+				                  			&nbsp;&nbsp;&nbsp;
+                  							<input name="" type="button" value="报表" style="cursor:pointer;" onclick="getMonitorLineExcelReport()"/>
+                  						</span>
+									</label>
+									<br/>&nbsp;
+								</fieldset>
+								
+			                	<br/><br/>
+								<fieldset style="width:65%;text-align:center;">
+									<legend>累积沉降量报表</legend>
+									<br/>
+									<label>
+				                  		<span class="orderbtn">
+                  							<input name="" type="button" value="报表" style="cursor:pointer;" onclick="getSinkingOffsetStatExcelReport()"/>
+                  						</span>
+									</label>
+									<br/>&nbsp;
+								</fieldset>
+								<br/><br/>
+							</span>
+							</div>
+						</div>
+					</div><!-- div-productmain END -->
+				</td>
+			</tr>
+		</table>
+		<div class="footer">$!httpInclude.include("/common/bottom.htm")
+		</div>
+	</div>
+
+	<script type="text/javascript">
+    jQuery(".notice").slide({ titCell:".tab-hd li", mainCell:".tab-bd",delayTime:0 });
+</script>
+</body>
+</html>

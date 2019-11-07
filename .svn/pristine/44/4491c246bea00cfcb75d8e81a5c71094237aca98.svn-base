@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>App状态-MonitorSys</title>
+<meta name="keywords" content="$!config.keywords" />
+<meta name="description" content="$!config.description" /><!--<link rel="shortcut icon" type="image/x-icon" href="$!webPath/resources/style/common/images/favicon.ico" />-->
+    <link href="$!webPath/resources/style/common/css/public_hj.css" rel="stylesheet" type="text/css" />
+    <link href="$!webPath/resources/style/common/css/index_hj.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="$!webPath/resources/js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="$!webPath/resources/js/public_hj.js"></script>
+
+<link href="$!webPath/resources/css/user.css" type="text/css" rel="stylesheet" />
+<script src="$!webPath/resources/js/jquery-1.6.2.js"></script>
+<script src="$!webPath/resources/js/jquery-ui-1.8.21.js"></script>
+<script src="$!webPath/resources/js/jquery.shop.common.js"></script>
+
+</head>
+<body class="info">
+$!httpInclude.include("/common/top.htm")
+<div class="main_bj"></div>
+<div class="main">
+    $!httpInclude.include("/common/head.htm")
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="user_table">
+
+    <tr> $!httpInclude.include("/common/menu_nav.htm?op=appstatuslist")
+        <td id="centerbg" valign="top">
+        <div class="productmain">
+        	<!--
+            <div class="ordernav">
+              <ul class="orderul">
+                <li class="this"><a href="$!webPath/buyer/report.htm">举报列表</a></li>
+              </ul>
+            </div>
+            -->
+            <div class="ordercon">
+              <form method="post" name="ListForm" id="ListForm">
+                <div class="ordersear">
+                    <span>监测线:</span> 
+					<span class="ordersel">
+                  		<select name="monitorlineid" id="monitorlineid">
+                  			<option value="" selected="selected">请选择</option>
+		                  	#foreach($monitorline in $monitorLines)
+		                  	<option value="$!monitorline.id"  #if($!monitorlineid==$!monitorline.id) selected="selected" #end>$!monitorline.name</option>
+		                  	#end
+                  		</select>
+                	</span>      
+                  	<span class="orderbtn">
+                  		<input name="" type="submit" value="查询" style="cursor:pointer;"/>
+                  	</span>
+                </div>
+
+                <div class="operation">
+                  <table width="100%" border="0" cellspacing="0" cellpadding="0" id="opertable" >
+                    <tr id="opertitle">
+                      <td width="30%"><b>监测线</b></td>
+                      <td><b>状态</b></td>
+                    </tr>
+				  	#foreach($obj in $objs)
+				  	<tr>
+                    	<td>$!{obj.name}</td>
+                      	<td>#if($!obj.aliveStatus==0) 正常 #else <span style="background:red">&nbsp;&nbsp;&nbsp;&nbsp;</span>失联 #end</td>
+                    </tr>
+				  	#end
+                  </table>
+                </div>
+                <div class="alldel">
+                  <div  class="userfenye">
+                    <input name="currentPage" type="hidden" id="currentPage" value="$!currentPage" />
+                  $!gotoPageFormHTML</div>
+                </div>
+              </form>
+            </div>
+          </div></td>
+      </tr>
+    </table>
+    <div class="footer">
+    $!httpInclude.include("/common/bottom.htm")
+	</div>
+  </div>
+<script type="text/javascript">
+    jQuery(".notice").slide({ titCell:".tab-hd li", mainCell:".tab-bd",delayTime:0 });
+</script>
+</body>
+</html>

@@ -1,0 +1,324 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>报表-MonitorSys</title>
+<meta name="keywords" content="$!config.keywords" />
+<meta name="description" content="$!config.description" />
+
+<link href="$!webPath/resources/style/common/css/public_hj.css"
+	rel="stylesheet" type="text/css" />
+<link href="$!webPath/resources/style/common/css/index_hj.css"
+	rel="stylesheet" type="text/css" />
+<link
+	href="$!webPath/resources/style/common/css/jquery-ui-1.8.22.custom.css"
+	type="text/css" rel="stylesheet" />
+<link href="$!webPath/resources/css/user.css" type="text/css"
+	rel="stylesheet" />
+<!--
+<script type="text/javascript"
+    src="$!webPath/resources/js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="$!webPath/resources/js/public_hj.js"></script>
+<script src="$!webPath/resources/js/jquery-1.6.2.js"></script>
+<script src="$!webPath/resources/js/jquery-ui-1.8.21.js"></script>
+<script src="$!webPath/resources/js/jquery.shop.common.js"></script>
+    -->
+
+<link href="$!webPath/resources/style/common/css/public_hj.css"
+	rel="stylesheet" type="text/css" />
+<link href="$!webPath/resources/style/common/css/index_hj.css"
+	rel="stylesheet" type="text/css" />
+<link href="$!webPath/resources/css/user.css" type="text/css"
+	rel="stylesheet" />
+<link href="$!webPath/resources/css/jquery.datetimepicker.css"
+	type="text/css" rel="stylesheet" />
+
+<link rel="stylesheet" type="text/css"
+	href="$!webPath/resources/bootstrap/css/cloud-admin.css">
+	<link rel="stylesheet" type="text/css"
+		href="$!webPath/resources/bootstrap/css/themes/default.css"
+		id="skin-switcher">
+		<link rel="stylesheet" type="text/css"
+			href="$!webPath/resources/bootstrap/css/responsive.css">
+
+			<!-- STYLESHEETS -->
+			<!--[if lt IE 9]><script src="js/flot/excanvas.min.js"></script><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script><![endif]-->
+			<link
+				href="$!webPath/resources/bootstrap/font-awesome/css/font-awesome.min.css"
+				rel="stylesheet">
+				<!-- ANIMATE -->
+				<link rel="stylesheet" type="text/css"
+					href="$!webPath/resources/bootstrap/css/animatecss/animate.min.css" />
+				<!-- DATE RANGE PICKER -->
+				<link rel="stylesheet" type="text/css"
+					href="$!webPath/resources/bootstrap/js/bootstrap-daterangepicker/daterangepicker-bs3.css" />
+				<!-- TODO -->
+				<link rel="stylesheet" type="text/css"
+					href="$!webPath/resources/bootstrap/js/jquery-todo/css/styles.css" />
+				<!-- FULL CALENDAR -->
+				<link rel="stylesheet" type="text/css"
+					href="$!webPath/resources/bootstrap/js/fullcalendar/fullcalendar.min.css" />
+				<!-- GRITTER -->
+				<link rel="stylesheet" type="text/css"
+					href="$!webPath/resources/bootstrap/js/gritter/css/jquery.gritter.css" />
+				<!-- FONTS -->
+				<link
+					href='http://fonts.useso.com/css?family=Open+Sans:300,400,600,700'
+					rel='stylesheet' type='text/css'>
+					<!-- 自定义CSS样式 -->
+					<link rel="stylesheet" type="text/css"
+						href="$!webPath/resources/bootstrap/css/custom/default.css">
+<script type="text/javascript"
+	src="$!webPath/resources/js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="$!webPath/resources/js/public_hj.js"></script>
+<script src="$!webPath/resources/js/jquery.shop.common.js"></script>
+<script src="$!webPath/resources/js/jquery-1.10.2.js"></script>
+<script src="$!webPath/resources/js/jquery.datetimepicker.full.js"></script>
+<script src="$!webPath/resources/js/jquery-ui-1.8.21.js"></script>
+
+<script src="$!webPath/resources/js/highstock.js"></script>
+<script src="$!webPath/resources/js/exporting.js"></script>
+<script>
+	
+</script>
+<style>
+* {
+	font-family: '华文细黑';
+}
+
+#top {
+	width: 100%;
+	height: 50px;
+	text-align: center;
+	background-color: gray;
+}
+
+#content {
+	width: 100%;
+}
+
+#bottom {
+	background-color: gray;
+	height: 80px;
+	width: 100%;
+}
+
+#contable {
+	border: none;
+	border-bottom: 2px solid #E4E4E4;
+	width: 100%
+}
+
+#contable td {
+	border: 0px;
+	border-top: 1px solid #E4E4E4;
+	padding-left: 10px;
+	padding-top: 10px;
+	padding-bottom: 7px;
+}
+
+#contitle td {
+	border-bottom: 1px solid #AEC7E5;
+	border-top: 1px solid #AEC7E5;
+}
+</style>
+<script type="text/javascript">
+	jQuery(document).ready(function() {
+		$("#button_import").click(function() {
+			jQuery.post("$!webPath/importDataOk.htm", function(data) {
+				jQuery.each(data, function(index, item) {
+					alert(item.count);
+				});
+				location.href = "$!webPath/picreport/import.htm";
+			}, "json");
+		});
+
+		$("#button_cancel").click(function() {
+			jQuery.post("$!webPath/importDataCancel.htm", function(data) {
+				console.log("Import Cancel: " + data.msg);
+				location.href = "$!webPath/picreport/import.htm";
+			});
+		});
+	});
+</script>
+</head>
+<body class="info">
+
+	<!-- 头部页眉 -->
+	$!httpInclude.include("/common/top.htm")
+	<!-- over -->
+
+	<!-- PAGE -->
+	<section id="page"> <!-- 侧边栏 -->
+	$!httpInclude.include("/common/menu_nav.htm") <!-- over -->
+	<div id="main-content">
+		<!-- SAMPLE BOX CONFIGURATION MODAL FORM-->
+
+		<!-- /SAMPLE BOX CONFIGURATION MODAL FORM-->
+		<div class="container">
+			<div class="row">
+				<div id="content" class="col-lg-12">
+					<!-- PAGE HEADER-->
+					<div class="row">$!httpInclude.include("/common/head.htm")</div>
+					<!-- /PAGE HEADER -->
+					<!-- DASHBOARD CONTENT -->
+					<!-- 数据看板 -->
+					<!-- DASHBOARD CONTENT -->
+					<div class="row">
+						<table width="100%" border="0" cellspacing="0" cellpadding="0"
+							class="user_table">
+							<td id="centerbg" valign="top">
+								<div class="productmain">
+									<div class="ordercon">
+										<div style="width: 100%;">
+											<div id="content" style="padding-bottom: 30px">
+												<table id="contable" border="0" cellspacing="0"
+													cellpadding="0">
+													<tbody>
+														<tr id="contitle">
+															<td width="15%"><b>传感器类型</b></td>
+															<td width="15%"><b>传感器名称</b></td>
+															<td width="15%"><b>监测线名称</b></td>
+															<td width="20%"><b>采样时间</b></td>
+															<td width="10%"><b>监测点读数</b></td>
+															<td width="10%"><b>即时形变</b></td>
+															<td width="10%"><b>累计形变</b></td>
+														</tr>
+
+														#foreach($show in $showData)
+														<tr>
+															<td>$!{show.sensorTypeName}</td>
+															<td>$!{show.sensorName}</td>
+															<td>$!{show.monitorLineName}</td>
+															<td>$!{show.collectingTime}</td>
+															<td>$!{show.deviceData}</td>
+															<td>$!{show.sinkingData}</td>
+															<td>$!{show.sinkingAccumulation}</td>
+														</tr>
+														#end
+													</tbody>
+												</table>
+											</div>
+										</div>
+										<div id="bottom">
+											<div style="text-align: center; padding: 20px">
+												<button id="button_import"
+													style="width: 200px; height: 30px;">
+													<b>确认导入</b>
+												</button>
+												<button id="button_cancel"
+													style="width: 200px; height: 30px;">
+													<b>放弃</b>
+												</button>
+											</div>
+										</div>
+									</div>
+								</div> <!-- div-productmain END -->
+							</td>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</section>
+	<!--返回最顶部-->
+	<!--
+<div class="back_box"  style=" display:none;width:50px; height:50px;position:fixed; bottom:180px; right:25px;">
+    <div class="back_index"><a href="./index.htm"  title="返回主页"></a></div>
+    <div class="back_top"><a id="toTop" href="#" bosszone="hometop" style="display: block;" onclick="window.scrollTo(0,0);return false" title="返回顶部" target="_self" ></a></div>
+</div>
+-->
+
+
+
+	<script type="text/javascript">
+		jQuery(".notice").slide({
+			titCell : ".tab-hd li",
+			mainCell : ".tab-bd",
+			delayTime : 0
+		});
+	</script>
+
+	<!-- JAVASCRIPTS -->
+	<!-- Placed at the end of the document so the pages load faster -->
+	<!-- JQUERY -->
+	<script
+		src="$!webPath/resources/bootstrap/js/jquery/jquery-2.0.3.min.js"></script>
+	<!-- JQUERY UI-->
+	<script
+		src="$!webPath/resources/bootstrap/js/jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.min.js"></script>
+	<!-- BOOTSTRAP -->
+	<script
+		src="$!webPath/resources/bootstrap/bootstrap-dist/js/bootstrap.min.js"></script>
+
+
+	<!-- DATE RANGE PICKER -->
+	<script
+		src="$!webPath/resources/bootstrap/js/bootstrap-daterangepicker/moment.min.js"></script>
+
+	<script
+		src="$!webPath/resources/bootstrap/js/bootstrap-daterangepicker/daterangepicker.min.js"></script>
+	<!-- SLIMSCROLL -->
+	<script type="text/javascript"
+		src="$!webPath/resources/bootstrap/js/jQuery-slimScroll-1.3.0/jquery.slimscroll.min.js"></script>
+	<!-- SLIMSCROLL -->
+	<script type="text/javascript"
+		src="$!webPath/resources/bootstrap/js/jQuery-slimScroll-1.3.0/jquery.slimscroll.min.js"></script>
+	<script type="text/javascript"
+		src="$!webPath/resources/bootstrap/js/jQuery-slimScroll-1.3.0/slimScrollHorizontal.min.js"></script>
+	<!-- BLOCK UI -->
+	<script type="text/javascript"
+		src="$!webPath/resources/bootstrap/js/jQuery-BlockUI/jquery.blockUI.min.js"></script>
+	<!-- SPARKLINES -->
+	<script type="text/javascript"
+		src="$!webPath/resources/bootstrap/js/sparklines/jquery.sparkline.min.js"></script>
+	<!-- EASY PIE CHART -->
+	<script
+		src="$!webPath/resources/bootstrap/js/jquery-easing/jquery.easing.min.js"></script>
+	<script type="text/javascript"
+		src="$!webPath/resources/bootstrap/js/easypiechart/jquery.easypiechart.min.js"></script>
+	<!-- FLOT CHARTS -->
+	<script src="$!webPath/resources/bootstrap/js/flot/jquery.flot.min.js"></script>
+	<script
+		src="$!webPath/resources/bootstrap/js/flot/jquery.flot.time.min.js"></script>
+	<script
+		src="$!webPath/resources/bootstrap/js/flot/jquery.flot.selection.min.js"></script>
+	<script
+		src="$!webPath/resources/bootstrap/js/flot/jquery.flot.resize.min.js"></script>
+	<script
+		src="$!webPath/resources/bootstrap/js/flot/jquery.flot.pie.min.js"></script>
+	<script
+		src="$!webPath/resources/bootstrap/js/flot/jquery.flot.stack.min.js"></script>
+	<script
+		src="$!webPath/resources/bootstrap/js/flot/jquery.flot.crosshair.min.js"></script>
+	<!-- TODO -->
+	<script type="text/javascript"
+		src="$!webPath/resources/bootstrap/js/jquery-todo/js/paddystodolist.js"></script>
+	<!-- TIMEAGO -->
+	<script type="text/javascript"
+		src="$!webPath/resources/bootstrap/js/timeago/jquery.timeago.min.js"></script>
+	<!-- FULL CALENDAR -->
+	<script type="text/javascript"
+		src="$!webPath/resources/bootstrap/js/fullcalendar/fullcalendar.min.js"></script>
+	<!-- COOKIE -->
+	<script type="text/javascript"
+		src="$!webPath/resources/bootstrap/js/jQuery-Cookie/jquery.cookie.min.js"></script>
+	<!-- GRITTER -->
+	<script type="text/javascript"
+		src="$!webPath/resources/bootstrap/js/gritter/js/jquery.gritter.min.js"></script>
+	<!-- CUSTOM SCRIPT -->
+	<script src="$!webPath/resources/bootstrap/js/script.js"></script>
+	<script>
+		jQuery(document).ready(function() {
+			App.setPage("Home"); //Set current page
+			App.init(); //Initialise plugins and elements
+		});
+	</script>
+	<!-- /JAVASCRIPTS -->
+	<script type="text/javascript">
+    jQuery(".notice").slide({ titCell:".tab-hd li", mainCell:".tab-bd",delayTime:0 });
+</script>
+</body>
+</html>

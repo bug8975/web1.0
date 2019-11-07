@@ -1,0 +1,383 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>累积形变曲线-MonitorSys</title>
+<meta name="keywords" content="$!config.keywords" />
+<meta name="description" content="$!config.description" />
+<link rel="shortcut icon" type="image/x-icon" href="" />
+<link href="$!webPath/resources/style/common/css/public_hj.css"
+	rel="stylesheet" type="text/css" />
+<link href="$!webPath/resources/style/common/css/index_hj.css"
+	rel="stylesheet" type="text/css" />
+<link
+	href="$!webPath/resources/style/common/css/jquery-ui-1.8.22.custom.css"
+	type="text/css" rel="stylesheet" />
+<link href="$!webPath/resources/css/user.css" type="text/css"
+	rel="stylesheet" />
+
+<script type="text/javascript"
+	src="$!webPath/resources/js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="$!webPath/resources/js/public_hj.js"></script>
+<script src="$!webPath/resources/js/jquery-1.6.2.js"></script>
+<script src="$!webPath/resources/js/jquery-ui-1.8.21.js"></script>
+<script src="$!webPath/resources/js/jquery.shop.common.js"></script>
+<script src="$!webPath/resources/js/highstock.js"></script>
+<script src="$!webPath/resources/js/exporting.js"></script>
+<script>
+Highcharts.setOptions({ global: { useUTC: false } });
+jQuery(document).ready(function(){
+  jQuery('#beginTime').datepicker({
+	  dateFormat:"yy-mm-dd",
+	  changeMonth: true,
+	  changeYear: true,
+	  monthNamesShort: ['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+      dayNamesMin: ['日','一','二','三','四','五','六']
+  });
+  jQuery('#endTime').datepicker({
+	  dateFormat:"yy-mm-dd",
+	  changeMonth: true,
+	  changeYear: true,
+	  monthNamesShort: ['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+      dayNamesMin: ['日','一','二','三','四','五','六']
+  });
+  jQuery("#sensorTypeName").change(function(){
+      //var level=jQuery(this).attr("level");
+      var sensorTypeName=jQuery(this).val();
+      // alert("sensorTypeName:" + sensorTypeName);
+      if(sensorTypeName!=""){
+          jQuery.post("$!webPath/load_monitorline.htm",{"sensorTypeName":sensorTypeName},function(data){
+              jQuery("#monitorlineid").empty();
+              jQuery("#monitorlineid").append("<option value=''>请选择</option>");
+              jQuery.each(data, function(index,item){
+                  jQuery("#monitorlineid").append("<option value='"+item.id+"'>"+item.monitorLineName+"</option>");
+                  //jQuery("#sensor").show();
+              });
+              jQuery("#sensorid").empty();
+              jQuery("#sensorid").append("<option value=''>请选择</option>");
+          },"json");
+      }else{
+          jQuery("#monitorlineid").empty();
+          jQuery("#monitorlineid").append("<option value=''>请选择类型</option>");
+      }
+  });
+  document.getElementById("singleMaxValue").value = getCookie("singleMax"); 
+  document.getElementById("singleMinValue").value = getCookie("singMin");
+  selected();
+});
+
+// alert($!sinkingData);
+#if($!sinkingData)
+	#if($!hasData == 'true')
+		$(function(){
+			var AxialDirection = $("#AxialDirection option:selected");
+			var maxValue,minValue;
+            if(getCookie("singleMax") == ""){
+                maxValue = null;
+            }else{
+                maxValue = getCookie("singleMax") ;
+            }
+            
+            if(getCookie("singMin") == ""){
+                minValue = null;
+            }else{
+                minValue = getCookie("singMin") ;
+            }
+            var myWidth = $('#container').css('width').slice(0,-2);
+			//alert($!sinkingData);
+		    var chart1=new Highcharts.StockChart({
+		        chart:{
+		            renderTo:'container',
+		            reflow:true,
+		            hight:700
+		        },
+		        credits:{
+		            enabled:false,
+		            href:"http://www.mymonitorsys.com",
+		            test:''
+		        },
+		        lang:{
+		            months:['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+		            shortMonths:['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+		            weekdays:['星期天','星期一','星期二','星期三','星期四','星期五','星期六'],
+		            exportButtonTitle:'导出PDF',
+		            printButtonTitle:'打印报表',
+		            downloadJPEG:"下载JPEG图片",
+                    downloadPDF:"下载PDF文件",
+                    downloadPNG:"下载PNG文件",
+                    downloadSVG:"下载SVG文件"
+		        },
+		        title:{
+		            text:'$!sensorType'
+		            //text:'静力水准仪:'+title
+		        },
+		        subtitle: {
+		            text: "#if($!direction=="x") X  #end #if($!direction=="y") Y  #end #if($!direction=="z") Z  #end #if($!direction=="") #if($!sensorTypeName =="InclinoMeter" ||$!sensorTypeName =="FixedInclinoMeter" ||$!sensorTypeName =="AccelerateMeter") #else 累计形变  #end #end($!unit)",
+		            x: 5,
+		            y: 35
+		        },
+		        rangeSelector:{
+		            buttons:[{
+		                type:'minute',
+		                count:60,
+		                text:'时'
+		            },{
+		                type:'day',
+		                count:1,
+		                text:'天'
+		            },{
+		                type:'all',
+		                text:'所有'
+		            }],
+		            selected:2,
+		            inputEnabled:true
+		        },
+		        tooltip:{
+		        	shared:false,
+		        	positioner: function () {
+		                return { x: 200, y: 50 };
+		            },
+		            shadow: false,
+		            borderWidth: 0,
+		            backgroundColor: 'rgba(255,255,255,0.8)',
+		            xDateFormat:'%Y-%m-%d %H:%M:%S'
+		        },
+		        xAxis:{
+		            dateTimeLabelFormats:{
+		                second:'%Y-%m-%d<br/>%H:%M:%S',
+		                minute:'%Y-%m-%d<br/>%H:%M',
+		                hour:'%Y-%m-%d<br/>%H',
+		                day:'%Y<br/>%m-%d',
+		                week:'%Y<br/>%m-%d',
+		                month:'%Y-%m',
+		                year:'%Y'
+		            }
+		        },
+		        yAxis: {
+		            title: {
+		                // text: '#if($!isInclinometer == true) Y #else 沉降量 #end ($!unit)'
+		            },
+	                max: maxValue,
+	                min: minValue,
+		        },
+		        /* legend: {
+		        	enabled:true,
+                    layout: 'vertical',
+                    align: 'top', //设置说明文字的文字 left/right/top/
+                    verticalAlign: 'top',
+                    x: 10,
+                    borderWidth: 0
+                }, */
+		        series:[
+		            #foreach($data in $datas)
+		            {
+		            	name:'$!data.sensorName ($!unit)',
+		            	data:
+                        #if($!direction=="x") $!data.xdata #end
+                        #if($!direction=="y") $!data.sinkingData #end
+                        #if($!direction=="z") $!data.zdata #end
+                        #if($!direction=="") $!data.zdata #end,
+			            tooltip:
+                       {
+                           valueDecimals:3
+                        }
+		            },
+				    #end
+		        ]
+		    });
+		});
+	#end
+#end
+
+
+
+function generateLine(){
+	var sensorTypeName = document.getElementById("sensorTypeName").value;
+	if(sensorTypeName == ""){
+		alert("请选择传感器类型，监测线和传感器!");
+		return;
+	}
+	var monitorlineid = document.getElementById("monitorlineid").value;
+	if(monitorlineid == ""){
+		alert("请选择监测线和传感器!");
+		return;
+	}
+	var beginTime = document.getElementById("beginTime").value;
+	var endTime = document.getElementById("endTime").value;
+	if(beginTime == "" || endTime == ""){
+		alert("请选择时间!");
+		return;
+	}
+
+	//var beginTimeArray = /^(\d{4})-(\d{1,2})-(\d{1,2}) (\d{1,2}):(\d{1,2}):(\d{1,2})$/.exec(s);
+	var beginTimeArray = /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(beginTime);
+	var endTimeArray = /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(endTime);
+	var beginTimeDate = new Date(parseInt(beginTimeArray[1], 10),
+		parseInt(beginTimeArray[2], 10)-1,
+	    parseInt(beginTimeArray[3], 10));
+	var endTimeDate = new Date(parseInt(endTimeArray[1], 10),
+			parseInt(endTimeArray[2], 10)-1,
+		    parseInt(endTimeArray[3], 10));
+	//alert(beginTimeDate + "=="+ endTimeDate);
+	if(beginTimeDate > endTimeDate){
+		alert("结束时间必须大于开始时间!");
+		return;
+	}
+	var dtNew=new Date(beginTimeDate.getTime()+31*24*60*60*1000);
+	if(endTimeDate > dtNew){
+		alert("时间段必须在一个月内!");
+		return;
+	}
+	var selected = document.getElementById("AxialDirection");
+	var AxialDirection = selected.options[selected.selectedIndex].value;
+	
+	var maxchange = document.getElementById("singleMaxValue").value;
+    setCookie('singleMax',maxchange);
+    var maxchange = document.getElementById("singleMinValue").value;
+    setCookie('singMin',maxchange);
+    
+	document.ListForm.submit();
+	
+}
+	
+	function selected(){
+		var selected = document.getElementById("sensorTypeName");
+        var sensorTypeName = selected.options[selected.selectedIndex].value;
+        if(sensorTypeName == "InclinoMeter" || sensorTypeName == "FixedInclinoMeter" || sensorTypeName == "AccelerateMeter"){
+            $('#AxialDirectionSpan').css('display','block');
+        }else{
+            $('#AxialDirectionSpan').css('display','none');
+        }
+	}
+	
+	
+</script>
+<script>
+//写cookies
+function setCookie(c_name, value, expiredays){
+ 　　　　var exdate=new Date();
+　　　　exdate.setDate(exdate.getDate() + expiredays);
+　　　　document.cookie=c_name+ "=" + escape(value) + ((expiredays==null) ? "" : ";expires="+exdate.toGMTString());
+ 　　}
+ 
+//读取cookies
+function getCookie(name)
+{
+    var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+ 
+    if(arr=document.cookie.match(reg)){
+    	return (arr[2]);
+    }else{
+        return null;
+    }     
+}
+ 
+//删除cookies
+function delCookie(name)
+{
+    var exp = new Date();
+    exp.setTime(exp.getTime() - 1);
+    var cval=getCookie(name);
+    if(cval!=null){
+        document.cookie= name + "="+cval+";expires="+exp.toGMTString();
+    }
+}
+
+</script>
+
+
+
+</head>
+<body class="info">
+	$!httpInclude.include("/common/top.htm")
+	<div class="main_bj"></div>
+	<div class="main">
+		$!httpInclude.include("/common/head.htm")
+		<table width="100%" border="0" cellspacing="0" cellpadding="0"
+			class="user_table">
+
+			<tr>
+				$!httpInclude.include("/common/menu_nav.htm?op=singledatamultiline")
+				<td id="centerbg" valign="top">
+					<div class="productmain">
+						<div class="ordercon">
+							<form method="post" name="ListForm" id="ListForm">
+								<div class="ordersear">
+									<span>传感器类型:</span> <span class="ordersel"> <select
+										name="sensorTypeName" id="sensorTypeName"   onchange="selected()">
+											<option value="" selected="selected">请选择</option>
+											#foreach($sensorType in $sensorTypes)
+											<option value="$!sensorType.name"
+												#if($!sensorTypeName==$!sensorType.name) selected="selected"
+												#end>$!sensorType.displayName</option> #end
+									</select>
+									</span> <span>&nbsp;&nbsp;&nbsp;监测线:</span> <span class="ordersel">
+										<select name="monitorlineid" id="monitorlineid">
+											<option value="" selected="selected">请选择</option>
+											#foreach($monitorline in $monitorLines)
+											<option value="$!monitorline.id"
+												#if($!monitorlineid==$!monitorline.id) selected="selected"
+												#end>$!monitorline.name</option> #end
+									</select>
+									</span> <span class="px10">&nbsp;&nbsp;&nbsp;时间段:</span> <span
+										class="ordersel"> <input name="beginTime" type="text"
+										id="beginTime" value="$!beginTime" readonly="readonly"
+										style="width: 80px;" />
+									</span> <span>-</span> <span class="ordersel"> <input
+										name="endTime" type="text" id="endTime" value="$!endTime"
+										readonly="readonly" style="width: 80px;" />
+									</span>
+									<span style="display:none"  id="AxialDirectionSpan">
+									<span>轴向选择:</span><span class="ordersel">
+                                        <select name="AxialDirection" id="AxialDirection">
+                                            <option value="">请选择</option>
+                                            <option value="x" #if($!direction=="x") selected="selected" #end>X</option>
+                                            <option value="y" #if($!direction=="y") selected="selected" #end>Y</option>
+                                            <option value="z" #if($!direction=="z") selected="selected" #end>Z</option>
+                                    </select></span>
+                                    </span> 
+									<span class="orderbtn"> <input name="" type="button"
+										value="生成曲线" style="cursor: pointer;" onclick="generateLine()" />
+									</span>
+								</div>
+							</form>
+						</div>
+
+						<div class="operation">
+							<div style="margin-bottom: 15px">
+								<span class="px10">&nbsp;&nbsp;&nbsp;形变范围(Y轴):</span> <input
+									id="singleMaxValue" maxlength="6" autocomplete="on"
+									placeholder="形变上限" style="" size="10"
+									onkeyup="this.value=this.value.replace(/[^\- \d.]/g,'')" />&nbsp;-
+								<input id="singleMinValue" maxlength="6" autocomplete="on"
+									placeholder="形变下限" style="" size="10"
+									onkeyup="this.value=this.value.replace(/[^\- \d.]/g,'')" />
+							</div>
+							<table width="100%" border="0" cellspacing="0" cellpadding="0"
+								id="opertable">
+								<tr id="opertitle">
+									<td></td>
+								</tr>
+							</table>
+							<div id="container" style="height: 750px;"></div>
+						</div>
+					</div> <!-- div-productmain END -->
+				</td>
+			</tr>
+		</table>
+		<div class="footer">$!httpInclude.include("/common/bottom.htm")
+		</div>
+	</div>
+
+	<!--返回最顶部-->
+	<!--
+<div class="back_box"  style=" display:none;width:50px; height:50px;position:fixed; bottom:180px; right:25px;">
+    <div class="back_index"><a href="./index.htm"  title="返回主页"></a></div>
+    <div class="back_top"><a id="toTop" href="#" bosszone="hometop" style="display: block;" onclick="window.scrollTo(0,0);return false" title="返回顶部" target="_self" ></a></div>
+</div>
+-->
+	<script type="text/javascript">
+    jQuery(".notice").slide({ titCell:".tab-hd li", mainCell:".tab-bd",delayTime:0 });
+</script>
+</body>
+</html>

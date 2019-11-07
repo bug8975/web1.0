@@ -1,0 +1,235 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>阈值设置-MonitorSys</title>
+<meta name="keywords" content="$!config.keywords" />
+<meta name="description" content="$!config.description" />
+<link href="$!webPath/resources/style/common/css/public_hj.css" rel="stylesheet" type="text/css" />
+<link href="$!webPath/resources/style/common/css/index_hj.css" rel="stylesheet" type="text/css" />
+<link href="$!webPath/resources/style/common/css/jquery-ui-1.8.22.custom.css" type="text/css" rel="stylesheet" />
+<link href="$!webPath/resources/css/user.css" type="text/css" rel="stylesheet" />
+
+<script type="text/javascript" src="$!webPath/resources/js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="$!webPath/resources/js/public_hj.js"></script>
+<script src="$!webPath/resources/js/jquery-1.6.2.js"></script>
+<script src="$!webPath/resources/js/jquery-ui-1.8.21.js"></script>
+<script src="$!webPath/resources/js/jquery.shop.common.js"></script>
+<script src="$!webPath/resources/js/highstock.js"></script>
+<script src="$!webPath/resources/js/exporting.js"></script>
+<script>
+jQuery(document).ready(function(){
+    jQuery("#sensorTypeName").change(function(){
+        //var level=jQuery(this).attr("level");
+        var sensorTypeName=jQuery(this).val();
+        // alert("sensorTypeName:" + sensorTypeName);
+        if(sensorTypeName!=""){
+            jQuery.post("$!webPath/load_monitorline.htm",{"sensorTypeName":sensorTypeName},function(data){
+                jQuery("#monitorlineid").empty();
+                jQuery("#monitorlineid").append("<option value=''>请选择</option>");
+                jQuery.each(data, function(index,item){
+                    jQuery("#monitorlineid").append("<option value='"+item.id+"'>"+item.monitorLineName+"</option>");
+                    //jQuery("#sensor").show();
+                });
+            },"json");
+        }else{
+            //for(var i=level;i<=3;i++){
+                jQuery("#monitorlineid").empty();
+                jQuery("#monitorlineid").append("<option value=''>请选择类型</option>");
+                //jQuery("#sensor").hide();
+            //}
+        }
+    });
+});
+
+function updateSinkingThreshold(id){
+	var checkResult = confirm("确定需要设置阈值？新阈值将同步到终端，请确认。");
+    if (!checkResult) {
+        return;
+    }
+	//document.getElementById("updateButton_"+id).value="设置中...";
+	//// alert("button number=" +$!rows);
+	//for(var i=0; i<$!rows; i++){
+	//	document.getElementsByName("updateButton")[i].disabled=true;
+	//	document.getElementsByName("updateButton")[i].style.backgroundColor="#808080";
+	//}
+
+	//$("updateButton_"+id).attr("disabled", true);
+	var threshold1 = document.getElementById(id+"_threshold1").value;
+    var threshold2 = document.getElementById(id+"_threshold2").value;
+    var threshold3 = document.getElementById(id+"_threshold3").value;
+    var formString = id + ";" + threshold1 + "," + threshold2 + ","+threshold3;
+    // alert("formString=" + formString);
+    if(formString != ""){
+        jQuery.post("$!webPath/setsinkingthreshold.htm",{"formString":formString},function(resultString){
+        	var indexNotLogin = resultString.indexOf("resultcode:1");
+        	var indexOnGoing = resultString.indexOf("resultcode:2");
+        	if(indexNotLogin != -1){ // not login
+        		alert("请登录!");
+        		var url="$!webPath";
+        		window.location.href=url;
+            } else if(indexOnGoing != -1) {
+            	alert("后台正在跟终端同步阈值，同步过程需要几分钟!");
+            	document.getElementById("updateButton_"+id).value="正在同步...";
+            	document.getElementById("updateButton_"+id).style.backgroundColor="#808080";
+            	document.getElementById("updateButton_"+id).disabled=true;
+            	document.getElementById("statuslabel_"+id).innerHTML = "正在同步";
+            } else {
+            	alert(resultString);
+                //alert("before reset:" + document.getElementById("updateButton_"+id).disabled);
+                //document.getElementById("updateButton_"+id).value="设置";
+                //for(var i=0; i<$!rows; i++){
+            	//	document.getElementsByName("updateButton")[i].disabled=false;
+            	//	document.getElementsByName("updateButton")[i].style.backgroundColor="#4C9CFF";
+            	//}
+            	//alert("after reset:" + document.getElementById("updateButton_"+id).disabled);
+            }
+        },"text");
+    }
+    //else {
+    //    //alert("before reset:" + document.getElementById("updateButton_"+id).disabled);
+    //    document.getElementById("updateButton_"+id).value="设置";
+    //    for(var i=0; i<$!rows; i++){
+    //		document.getElementsByName("updateButton")[i].disabled=false;
+    //		document.getElementsByName("updateButton")[i].style.backgroundColor="#4C9CFF";
+    //	  }
+    	//alert("after reset:" + document.getElementById("updateButton_"+id).disabled);
+    //}
+
+
+}
+</script>
+</head>
+<body class="info">
+	$!httpInclude.include("/common/top.htm")
+	<div class="main_bj"></div>
+	<div class="main">
+		$!httpInclude.include("/common/head.htm")
+		<table width="100%" border="0" cellspacing="0" cellpadding="0"
+			class="user_table">
+
+			<tr>
+				$!httpInclude.include("/common/menu_nav.htm?op=thresholdset")
+				<td id="centerbg" valign="top">
+			        <div class="productmain">
+			            <div class="ordercon">
+			              <form method="post" name="ListForm" id="ListForm">
+                <div class="ordersear">
+                    <span>传感器类型:</span> 
+					<span class="ordersel">
+                  		<select name="sensorTypeName" id="sensorTypeName">
+                  			<option value="" selected="selected">请选择</option>
+		                  	#foreach($sensorType in $sensorTypes)
+		                  	<option value="$!sensorType.name"  #if($!sensorTypeName==$!sensorType.name) selected="selected" #end>$!sensorType.displayName</option>
+		                  	#end
+                  		</select>
+                	</span>
+                    <span>&nbsp;&nbsp;监测线:</span> 
+					<span class="ordersel">
+                  		<select name="monitorlineid" id="monitorlineid">
+                  			<option value="" selected="selected">请选择</option>
+		                  	#foreach($monitorline in $monitorLines)
+		                  	<option value="$!monitorline.id"  #if($!monitorlineid==$!monitorline.id) selected="selected" #end>$!monitorline.name</option>
+		                  	#end
+                  		</select>
+                	</span>
+                  	<span class="orderbtn">
+                  		<input name="" type="submit" value="查询" style="cursor:pointer;"/>
+                  	</span>
+                </div>
+
+			                <div class="operation">
+			                  <table width="100%" border="0" cellspacing="0" cellpadding="0" id="opertable" >
+			                    <tr id="opertitle">
+			                      <td width="12%"><b>监测线</b></td>
+			                      <td width="16%"><b>一级预警阈值</b></td>
+			                      <td width="16%"><b>二级预警阈值</b></td>
+			                      <td width="18%"><b>三级预警阈值</b></td>
+			                      <td width="16%"><b>设置状态</b></td>
+			                      #if($!logined_userrole=="ADMIN") 
+			                      <td width="16%"><b>操作</b></td> 
+			                      #end
+			                    </tr>
+			                    #foreach($obj in $objs)
+			                    <tr>
+			                      <td>$!{obj.name}</td>
+			                      <td>
+				                      #if($!logined_userrole=="ADMIN") 
+				                      	<input type="text" name="$!{obj.id}_threshold1" id="$!{obj.id}_threshold1" value="$!{obj.sinkingthresholdl1}"/>
+				                      #else
+				                      	$!{obj.sinkingthresholdl1}
+				                      #end
+				                  </td>
+			                      <td>
+				                      #if($!logined_userrole=="ADMIN") 
+				                      	<input type="text" name="$!{obj.id}_threshold2" id="$!{obj.id}_threshold2" value="$!{obj.sinkingthresholdl2}"/>
+				                      #else
+				                      	$!{obj.sinkingthresholdl2}
+				                      #end
+			                      </td>
+			                      <td>
+			                      	#if($!logined_userrole=="ADMIN") 
+			                      		<input type="text" name="$!{obj.id}_threshold3" id="$!{obj.id}_threshold3" value="$!{obj.sinkingthresholdl3}"/>
+			                      	#else
+			                      		$!{obj.sinkingthresholdl3}
+			                      	#end
+			                      </td>
+			                      <td>
+			                      	<label id="statuslabel_$!{obj.id}">
+				                      	#if($!{obj.thresholdSetStatus}==2) 
+				                      		正在同步
+				                      	#else 
+				                      		#if($!{obj.thresholdSetStatus}==1) 
+				                      			同步成功
+				                      		#else 
+				                      			#if($!{obj.thresholdSetStatus}==0) 
+				                      				初始值
+				                      			#else
+				                      				同步失败
+				                      			#end
+				                      		#end
+				                      	#end
+			                      	</label>
+
+			                      </td>
+			                      #if($!logined_userrole=="ADMIN") 
+			                      <td>
+					                <span class="orderbtn" style="width:100%;float:right">
+					                	<input name="updateButton" id="updateButton_$!{obj.id}" type="button" 
+					                	#if($!{obj.thresholdSetStatus}==2) 
+					                		value="正在同步..." 
+					                		disabled="disabled" 
+					                		style="background-color:#808080" 
+					                	#else 
+											value="设置" 
+											style="cursor:pointer;" 
+											onclick="updateSinkingThreshold($!{obj.id})" 
+					                	#end  
+					                	 />
+					                </span>
+			                      </td>
+			                      #end
+			                    </tr>
+			                    #end	  
+			                  </table>
+			                </div>
+			                <div class="alldel">
+			                  <div  class="userfenye">
+			                    <input name="currentPage" type="hidden" id="currentPage" value="$!currentPage" />
+			                  $!gotoPageFormHTML</div>
+			                </div>
+			              </form>
+			            </div>
+			          </div><!-- div-productmain END -->
+				</td>
+			</tr>
+		</table>
+		<div class="footer">$!httpInclude.include("/common/bottom.htm")
+		</div>
+	</div>
+
+	<script type="text/javascript">
+    jQuery(".notice").slide({ titCell:".tab-hd li", mainCell:".tab-bd",delayTime:0 });
+</script>
+</body>
+</html>

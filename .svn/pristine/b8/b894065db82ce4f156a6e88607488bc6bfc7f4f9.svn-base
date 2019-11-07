@@ -1,0 +1,176 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>报表-MonitorSys</title>
+<meta name="keywords" content="$!config.keywords" />
+<meta name="description" content="$!config.description" />
+
+<link href="$!webPath/resources/style/common/css/public_hj.css"
+	rel="stylesheet" type="text/css" />
+<link href="$!webPath/resources/style/common/css/index_hj.css"
+	rel="stylesheet" type="text/css" />
+<link
+	href="$!webPath/resources/style/common/css/jquery-ui-1.8.22.custom.css"
+	type="text/css" rel="stylesheet" />
+<link href="$!webPath/resources/css/user.css" type="text/css"
+	rel="stylesheet" />
+<!--
+<script type="text/javascript"
+    src="$!webPath/resources/js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="$!webPath/resources/js/public_hj.js"></script>
+<script src="$!webPath/resources/js/jquery-1.6.2.js"></script>
+<script src="$!webPath/resources/js/jquery-ui-1.8.21.js"></script>
+<script src="$!webPath/resources/js/jquery.shop.common.js"></script>
+    -->
+
+<link href="$!webPath/resources/style/common/css/public_hj.css"
+	rel="stylesheet" type="text/css" />
+<link href="$!webPath/resources/style/common/css/index_hj.css"
+	rel="stylesheet" type="text/css" />
+<link href="$!webPath/resources/css/user.css" type="text/css"
+	rel="stylesheet" />
+<link href="$!webPath/resources/css/jquery.datetimepicker.css"
+	type="text/css" rel="stylesheet" />
+<script type="text/javascript"
+	src="$!webPath/resources/js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="$!webPath/resources/js/public_hj.js"></script>
+<script src="$!webPath/resources/js/jquery.shop.common.js"></script>
+<script src="$!webPath/resources/js/jquery-1.10.2.js"></script>
+<script src="$!webPath/resources/js/jquery.datetimepicker.full.js"></script>
+<script src="$!webPath/resources/js/jquery-ui-1.8.21.js"></script>
+
+<script src="$!webPath/resources/js/highstock.js"></script>
+<script src="$!webPath/resources/js/exporting.js"></script>
+<script>
+
+</script>
+<style>
+* {
+	font-family: '华文细黑';
+}
+
+#top {
+	width: 100%;
+	height: 50px;
+	text-align: center;
+	background-color: gray;
+}
+
+#content {
+	width: 100%;
+}
+
+#bottom {
+	background-color: gray;
+	height: 80px;
+	width: 100%;
+}
+
+#contable {
+	border: none;
+	border-bottom: 2px solid #E4E4E4;
+	width: 100%
+}
+
+#contable td {
+	border: 0px;
+	border-top: 1px solid #E4E4E4;
+	padding-left: 10px;
+	padding-top: 10px;
+	padding-bottom: 7px;
+}
+
+#contitle td {
+	border-bottom: 1px solid #AEC7E5;
+	border-top: 1px solid #AEC7E5;
+}
+</style>
+<script type="text/javascript">
+ jQuery(document).ready(function(){
+            $("#button_import").click(function(){
+                jQuery.post("$!webPath/importDataOk.htm",function(data){
+                	jQuery.each(data, function(index,item){
+                        alert( item.count);
+                    });
+                    location.href = "$!webPath/picreport/import.htm";
+                },"json");
+            });
+            
+            $("#button_cancel").click(function(){
+            	jQuery.post("$!webPath/importDataCancel.htm", function(data) {
+                    console.log("Import Cancel: " + data.msg);
+                    location.href = "$!webPath/picreport/import.htm";
+                });
+            });
+        });
+    
+    </script>
+</head>
+<body class="info">
+	$!httpInclude.include("/common/top.htm")
+	<div class="main_bj"></div>
+	<div class="main">
+		$!httpInclude.include("/common/head.htm")
+		<table width="100%" border="0" cellspacing="0" cellpadding="0"
+			class="user_table">
+
+			<tr>
+				$!httpInclude.include("/common/menu_nav.htm?op=import")
+				<td id="centerbg" valign="top">
+					<div class="productmain">
+						<div class="ordercon">
+							<div style="width: 100%;">
+								<div id="content" style="padding-bottom: 30px">
+									<table id="contable" border="0" cellspacing="0" cellpadding="0">
+										<tbody>
+											<tr id="contitle">
+												<td width="15%"><b>传感器类型</b></td>
+												<td width="15%"><b>传感器名称</b></td>
+												<td width="15%"><b>监测线名称</b></td>
+												<td width="20%"><b>采样时间</b></td>
+												<td width="10%"><b>监测点读数</b></td>
+												<td width="10%"><b>即时形变</b></td>
+												<td width="10%"><b>累计形变</b></td>
+											</tr>
+
+											#foreach($show in $showData)
+											<tr>
+												<td>$!{show.sensorTypeName}</td>
+												<td>$!{show.sensorName}</td>
+												<td>$!{show.monitorLineName}</td>
+												<td>$!{show.collectingTime}</td>
+												<td>$!{show.deviceData}</td>
+												<td>$!{show.sinkingData}</td>
+												<td>$!{show.sinkingAccumulation}</td>
+											</tr>
+											#end
+										</tbody>
+									</table>
+								</div>
+							</div>
+							<div id="bottom">
+								<div style="text-align: center; padding: 20px">
+									<button id="button_import" style="width: 200px; height: 30px;">
+										<b>确认导入</b>
+									</button>
+									<button id="button_cancel" style="width: 200px; height: 30px;">
+										<b>放弃</b>
+									</button>
+								</div>
+							</div>
+						</div>
+					</div> <!-- div-productmain END -->
+				</td>
+			</tr>
+		</table>
+		<div class="footer">$!httpInclude.include("/common/bottom.htm")
+		</div>
+	</div>
+
+	<script type="text/javascript">
+    jQuery(".notice").slide({ titCell:".tab-hd li", mainCell:".tab-bd",delayTime:0 });
+</script>
+</body>
+</html>

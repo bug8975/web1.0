@@ -1,0 +1,14 @@
+
+<div class="header">
+    <div class="toph_bigsearch">
+    </div>
+</div>
+<div class="nav clearfix">
+
+    <!--板块导航栏 star-->
+    <div class="navright">
+        <ul class="clearfix">
+        </ul>
+    </div>
+    <!--板块导航栏 end-->
+</div>

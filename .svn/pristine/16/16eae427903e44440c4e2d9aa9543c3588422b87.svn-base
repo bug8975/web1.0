@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache>
+
+	<diskStore path="java.io.tmpdir" />
+
+	<defaultCache maxElementsInMemory="1000" eternal="false"
+		timeToIdleSeconds="1200" timeToLiveSeconds="1200"
+		overflowToDisk="true" clearOnFlush="true"
+		memoryStoreEvictionPolicy="LFU">
+	</defaultCache>
+
+    <cache name="org.hibernate.cache.StandardQueryCache" maxElementsInMemory="200" eternal="false"
+           timeToIdleSeconds="1200" timeToLiveSeconds="3600" overflowToDisk="true" />
+
+    <!-- 表更新时间缓存 -->
+    <cache name="org.hibernate.cache.UpdateTimestampsCache" maxElementsInMemory="1000" eternal="true" overflowToDisk="false" />
+
+    <cache name="SimplePageFragmentCachingFilter" maxElementsInMemory="10"
+		maxElementsOnDisk="10" eternal="false" overflowToDisk="true"
+		diskSpoolBufferSizeMB="20" timeToIdleSeconds="120"
+		timeToLiveSeconds="120" memoryStoreEvictionPolicy="LFU" />
+
+	<!--单独对某个entity的缓存策略设置-->
+    <!--
+        maxElementsInMemory: 内存中最大对象数量。0不限制。
+        maxElementsOnDisk：硬盘中最大对象数量。0不限制。默认为0。
+        eternal：对象是否永不过期。true或false。 选true则时间设置失效
+        timeToIdleSeconds：闲置时间。超过这个时间没有被使用，将失效。0不限制。默认为0。
+        timeToLiveSeconds：生存时间。从创建到过期的时间。0不限制。默认为0。
+    -->
+
+    <cache name="com.monitor.foundation.domain.MonitorLine"
+           maxElementsInMemory="0" eternal="true" timeToIdleSeconds="1200"
+           timeToLiveSeconds="1200" overflowToDisk="true" clearOnFlush="true">
+    </cache>
+    <cache name="com.monitor.foundation.domain.Sensor"
+           maxElementsInMemory="0" eternal="true" timeToIdleSeconds="1200"
+           timeToLiveSeconds="1200" overflowToDisk="true" clearOnFlush="true">
+    </cache>
+</ehcache>

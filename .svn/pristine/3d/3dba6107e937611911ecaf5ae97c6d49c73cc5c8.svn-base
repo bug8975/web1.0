@@ -1,0 +1,37 @@
+<script type="text/javascript" language="javascript">
+$(document).ready(function () {  
+    setInterval("getCountData()", 10000);  
+});  
+function getCountData() {
+    jQuery.post("$!webPath/common/getsensorcount.htm", function(data){
+        //$("#sensorCount").text("共有 " + data.sensorCount + " 个探测器 | ");
+        $("#sensorCountL1Alarm").text(" " + data.sensorCountL1Alarm + " ");
+        $("#sensorCountL2Alarm").text(" " + data.sensorCountL2Alarm + " ");
+        $("#sensorCountL3Alarm").text(" " + data.sensorCountL3Alarm + " ");
+    }, "json");
+    jQuery.post("$!webPath/common/getSysTitle.htm", function(data){
+        $("#SysTitle").empty();
+        $("#SysTitle").append("<b> " + data.SysTitle + " </b>");
+    }, "json");
+}
+</script>
+<style>
+</style>
+<div class="top">
+    <div class="page">
+        <div class="pageright" id="site-nav">
+            <ul class="quick-menu">
+                <!--<li class="menupx" id="sensorCount">共有&nbsp;$!{sensorCount}&nbsp;个探测器&nbsp;|</li>-->
+                <!-- <li class="menupx">正常<span style="color:#FFFFFF;">&nbsp;97&nbsp;</span>条&nbsp;|&nbsp;</li>-->
+                <li class="menupx">&nbsp;一级预警<span style="color: #FF3300;" id="sensorCountL1Alarm">&nbsp;$!{sensorCountL1Alarm}&nbsp;</span>条&nbsp;|</li>
+                <li class="menupx">&nbsp;二级预警<span style="color: #FF3300;" id="sensorCountL2Alarm">&nbsp;$!{sensorCountL2Alarm}&nbsp;</span>条&nbsp;|</li>
+                <li class="menupx">&nbsp;三级预警<span style="color: #FF3300;" id="sensorCountL3Alarm">&nbsp;$!{sensorCountL3Alarm}&nbsp;</span>条&nbsp;</li>
+            </ul>
+        </div>
+        <div>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span id="SysTitle" class="title" style="font-size: 2em; color: #FFFFFF"><b>$!{SysTitle}</b>
+            </span>
+        </div>
+    </div>
+</div>

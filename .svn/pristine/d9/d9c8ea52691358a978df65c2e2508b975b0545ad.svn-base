@@ -1,0 +1,272 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>监测线多曲线-MonitorSys</title>
+<meta name="keywords" content="$!config.keywords" />
+<meta name="description" content="$!config.description" />
+<link href="$!webPath/resources/style/common/css/public_hj.css" rel="stylesheet" type="text/css" />
+<link href="$!webPath/resources/style/common/css/index_hj.css" rel="stylesheet" type="text/css" />
+<link href="$!webPath/resources/style/common/css/jquery-ui-1.8.22.custom.css" type="text/css" rel="stylesheet" />
+<link href="$!webPath/resources/css/user.css" type="text/css" rel="stylesheet" />
+
+<script type="text/javascript" src="$!webPath/resources/js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="$!webPath/resources/js/public_hj.js"></script>
+<script src="$!webPath/resources/js/jquery-1.6.2.js"></script>
+<script src="$!webPath/resources/js/jquery-ui-1.8.21.js"></script>
+<script src="$!webPath/resources/js/jquery.shop.common.js"></script>
+<script src="$!webPath/resources/js/highstock.js"></script>
+<script src="$!webPath/resources/js/exporting.js"></script>
+<script>
+Highcharts.setOptions({ global: { useUTC: false } });
+	jQuery(document).ready(function(){
+	  jQuery('#beginTime').datepicker({
+		  dateFormat:"yy-mm-dd",
+		  changeMonth: true,
+		  changeYear: true,
+		  monthNamesShort: ['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+	      dayNamesMin: ['日','一','二','三','四','五','六']
+	  });
+	  jQuery('#endTime').datepicker({
+		  dateFormat:"yy-mm-dd",
+		  changeMonth: true,
+		  changeYear: true,
+		  monthNamesShort: ['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+	      dayNamesMin: ['日','一','二','三','四','五','六']
+	  });
+
+
+		jQuery("#sensorTypeName").change(function(){
+		    //var level=jQuery(this).attr("level");
+		    var sensorTypeName=jQuery(this).val();
+		    // alert("sensorTypeName:" + sensorTypeName);
+		    if(sensorTypeName!=""){
+		        jQuery.post("$!webPath/load_monitorline.htm",{"sensorTypeName":sensorTypeName},function(data){
+		            jQuery("#monitorlineid").empty();
+		            jQuery("#monitorlineid").append("<option value=''>请选择</option>");
+		            jQuery.each(data, function(index,item){
+		                jQuery("#monitorlineid").append("<option value='"+item.id+"'>"+item.monitorLineName+"</option>");
+		                //jQuery("#sensor").show();
+		            });
+		        },"json");
+		    }else{
+		        //for(var i=level;i<=3;i++){
+		            jQuery("#monitorlineid").empty();
+		            jQuery("#monitorlineid").append("<option value=''>请选择类型</option>");
+		            //jQuery("#sensor").hide();
+		        //}
+		    }
+		});
+	});
+
+	var seriesOptions = [];
+	function createChart(sensorType, unit) {
+		//alert(seriesOptions[0].name);
+		//alert(seriesOptions[0].data);
+	    var chart1=new Highcharts.StockChart({
+	        chart:{
+	            renderTo:'container',
+	            width:1000,
+	            hight:550
+
+	        },
+	        credits:{
+	            enabled:false,
+	            href:"http://www.mymonitorsys.com",
+	            test:''
+	        },
+	        lang:{
+	            months:['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+	            shortMonths:['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+	            weekdays:['星期天','星期一','星期二','星期三','星期四','星期五','星期六'],
+	            exportButtonTitle:'导出PDF',
+	            printButtonTitle:'打印报表'
+	        },
+	        title:{
+	        	 text:sensorType
+	            //text:'静力水准仪:'+title
+	        },
+	        subtitle: {
+	            text: '沉降量 ('+unit+')',
+	            x: -20
+	        },
+	        rangeSelector:{
+	            buttons:[{
+	                type:'minute',
+	                count:60,
+	                text:'时'
+	            },{
+	                type:'day',
+	                count:1,
+	                text:'天'
+	            },{
+	                type:'all',
+	                text:'所有'
+	            }],
+	            //selected:1,
+	            selected:2,
+	            inputEnabled:true
+	        },
+	        tooltip:{
+	            xDateFormat:'%Y-%m-%d %H:%M:%S'
+	        },
+	        xAxis:{
+	            dateTimeLabelFormats:{
+	                second:'%Y-%m-%d<br/>%H:%M:%S',
+	                minute:'%Y-%m-%d<br/>%H:%M',
+	                hour:'%Y-%m-%d<br/>%H',
+	                day:'%Y<br/>%m-%d',
+	                week:'%Y<br/>%m-%d',
+	                month:'%Y-%m',
+	                year:'%Y'
+	            }
+	        },
+	        yAxis: {
+	            title: {
+	                text: '沉降量 ('+unit+')'
+	            }
+	        },
+	   
+	        series: seriesOptions
+	    });
+	}
+
+
+
+
+function getDatasAndCreateCharts(){
+	//alert("getDatasAndCreateCharts....");
+	seriesOptions = []; // clear
+	var monitorlineid = document.getElementById("monitorlineid").value;
+	var beginTime = document.getElementById("beginTime").value;
+	var endTime = document.getElementById("endTime").value;
+
+	var sensorTypeName = document.getElementById("sensorTypeName").value;
+	if(sensorTypeName == ""){
+		alert("请选择传感器类型和监测线!");
+		return;
+	}
+	if(monitorlineid == ""){
+		alert("请选择监测线!");
+		return;
+	}
+	if(beginTime == "" || endTime == ""){
+		alert("请选择时间!");
+		return;
+	}
+
+	//var beginTimeArray = /^(\d{4})-(\d{1,2})-(\d{1,2}) (\d{1,2}):(\d{1,2}):(\d{1,2})$/.exec(s);
+	var beginTimeArray = /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(beginTime);
+	var endTimeArray = /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(endTime);
+	var beginTimeDate = new Date(parseInt(beginTimeArray[1], 10),
+		parseInt(beginTimeArray[2], 10)-1,
+	    parseInt(beginTimeArray[3], 10));
+	var endTimeDate = new Date(parseInt(endTimeArray[1], 10),
+			parseInt(endTimeArray[2], 10)-1,
+		    parseInt(endTimeArray[3], 10));
+	//alert(beginTimeDate + "=="+ endTimeDate);
+	if(beginTimeDate > endTimeDate){
+		alert("结束时间必须大于开始时间!");
+		return;
+	}
+	var dtNew=new Date(beginTimeDate.getTime()+31*24*60*60*1000);
+	if(endTimeDate > dtNew){
+		alert("时间段必须在一个月内!");
+		return;
+	}
+	
+    jQuery.post("$!webPath/picreport/getmultipledata.htm", {"monitorlineid":monitorlineid, "beginTime":beginTime, "endTime":endTime}, function(datas){
+    	//alert(datas);
+        if(datas != null) {
+            var sensorType;
+            var unit;
+            jQuery.each(datas, function(index, item){
+            	//alert(index + "-" + item.sensorName);
+                //alert(item.data);
+                if(null != item.data && item.data == "NOTLOGINERROR"){ // not login, goto login page
+                	alert("请登录!");
+                	window.location.href="$!webPath";
+                }
+            	seriesOptions[index] = {
+                	name: item.sensorName,
+                	data: item.data
+                };
+            	sensorType = item.sensorType;
+            	unit = item.unit;
+                //alert(index + "-" + datas.length);
+            });
+            createChart(sensorType, unit);
+        }
+    }, "json");
+}
+</script>
+</head>
+<body class="info">
+$!httpInclude.include("/common/top.htm")
+<div class="main_bj"></div>
+<div class="main">
+    $!httpInclude.include("/common/head.htm")
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="user_table">
+
+    <tr>
+        $!httpInclude.include("/common/menu_nav.htm?op=multipledataline")
+        <td id="centerbg" valign="top">
+        	<div class="productmain">
+             <div class="ordercon">
+              <form method="post" name="ListForm" id="ListForm">
+                <div class="ordersear">
+                    <span>传感器类型:</span> 
+					<span class="ordersel">
+                  		<select name="sensorTypeName" id="sensorTypeName">
+                  			<option value="" selected="selected">请选择</option>
+		                  	#foreach($sensorType in $sensorTypes)
+		                  	<option value="$!sensorType.name"  #if($!sensorTypeName==$!sensorType.name) selected="selected" #end>$!sensorType.displayName</option>
+		                  	#end
+                  		</select>
+                	</span>
+                    <span>&nbsp;&nbsp;&nbsp;监测线:</span>
+					<span class="ordersel">
+                  		<select name="monitorlineid" id="monitorlineid">
+                  			<option value="" selected="selected">请选择</option>
+		                  	#foreach($monitorline in $monitorLines)
+		                  	<option value="$!monitorline.id"  #if($!monitorlineid==$!monitorline.id) selected="selected" #end>$!monitorline.name</option>
+		                  	#end
+                  		</select>
+					</span>
+                  	<span class="px10">&nbsp;&nbsp;&nbsp;时间段:</span> 
+                  	<span class="ordersel">
+                  		<input name="beginTime" type="text" id="beginTime" value="$!beginTime" readonly="readonly" style="width:120px;"/>
+                  	</span>
+                  	<span>-</span>
+                  	<span class="ordersel">
+                  		<input name="endTime" type="text" id="endTime" value="$!endTime" readonly="readonly" style="width:120px;"/>
+                  	</span>
+                  	<span class="orderbtn">
+                  		<input name="" type="button" value="生成曲线" style="cursor:pointer;" onclick="getDatasAndCreateCharts()"/>
+                  	</span>
+                </div>
+              </form>
+            </div>
+              
+            <div class="operation">
+            	<table width="1039" border="0" cellspacing="0" cellpadding="0" id="opertable" >
+            		<tr id="opertitle">
+                    	<td></td>
+                    </tr>
+                </table>
+        	<div id="container" style="height: 550px; min-width: 310px"></div>
+           </div>
+           </div><!-- div-productmain END -->
+        </td>
+      </tr>
+    </table>
+    <div class="footer">
+    $!httpInclude.include("/common/bottom.htm")
+	</div>
+  </div>
+
+<script type="text/javascript">
+    jQuery(".notice").slide({ titCell:".tab-hd li", mainCell:".tab-bd",delayTime:0 });
+</script>
+</body>
+</html>

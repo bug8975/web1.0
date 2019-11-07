@@ -1,0 +1,359 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>趋势分析-MonitorSys</title>
+    <meta name="keywords" content="$!config.keywords" />
+    <meta name="description" content="$!config.description" /><!--<link rel="shortcut icon" type="image/x-icon" href="$!webPath/resources/style/common/images/favicon.ico" />-->
+    <link href="$!webPath/resources/style/common/css/public_hj.css" rel="stylesheet" type="text/css" />
+    <link href="$!webPath/resources/style/common/css/index_hj.css" rel="stylesheet" type="text/css" />
+    <link href="$!webPath/resources/css/user.css" type="text/css" rel="stylesheet" />
+    <link href="$!webPath/resources/css/jquery.datetimepicker.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="$!webPath/resources/js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="$!webPath/resources/js/public_hj.js"></script>
+    <!-- <script src="$!webPath/resources/js/jquery-1.6.2.js"></script>
+    <script src="$!webPath/resources/js/jquery-ui-1.8.21.js"></script>-->
+    <script src="$!webPath/resources/js/jquery.shop.common.js"></script>
+    <script src="$!webPath/resources/js/jquery-1.10.2.js"></script>
+    <script src="$!webPath/resources/js/jquery.datetimepicker.full.js"></script>
+    <script>
+    jQuery(document).ready(function(){
+        jQuery("#sensorTypeName").change(function(){
+            //var level=jQuery(this).attr("level");
+            var sensorTypeName=jQuery(this).val();
+            // alert("sensorTypeName:" + sensorTypeName);
+            if(sensorTypeName!=""){
+                jQuery.post("$!webPath/load_monitorline.htm",{"sensorTypeName":sensorTypeName},function(data){
+                    jQuery("#monitorlineid").empty();
+                    jQuery("#monitorlineid").append("<option value=''>请选择</option>");
+                    jQuery.each(data, function(index,item){
+                        jQuery("#monitorlineid").append("<option value='"+item.id+"'>"+item.monitorLineName+"</option>");
+                        //jQuery("#sensor").show();
+                    });
+                    jQuery("#sensorid").empty();
+                    jQuery("#sensorid").append("<option value=''>请选择</option>");
+                },"json");
+            }else{
+                //for(var i=level;i<=3;i++){
+                    jQuery("#monitorlineid").empty();
+                    jQuery("#monitorlineid").append("<option value=''>请选择</option>");
+                    //jQuery("#sensor").hide();
+                //}
+            }
+        });
+
+        jQuery("#monitorlineid").change(function(){
+            //var level=jQuery(this).attr("level");
+            var id=jQuery(this).val();
+            if(id!=""){
+                jQuery.post("$!webPath/load_sensor.htm",{"pid":id},function(data){
+                    jQuery("#sensorid").empty();
+                    jQuery("#sensorid").append("<option value=''>请选择</option>");
+                    jQuery.each(data, function(index,item){
+                        jQuery("#sensorid").append("<option value='"+item.id+"'>"+item.sensorName+"</option>");
+                        //jQuery("#sensor").show();
+                    });
+                },"json");
+            }else{
+                //for(var i=level;i<=3;i++){
+                    jQuery("#sensorid").empty();
+                    jQuery("#sensorid").append("<option value=''>请选择</option>");
+                    //jQuery("#sensor").hide();
+                //}
+            }
+        });
+    });
+        
+    function dateFormat(timeMs, format){
+        var t = new Date(timeMs);
+        var tf = function(i){return (i < 10 ? '0' : '') + i};
+        return format.replace(/yyyy|MM|dd|HH|mm|ss/g, function(a){
+            switch(a){
+                case 'yyyy':
+                    return tf(t.getFullYear());
+                    break;
+                case 'MM':
+                    return tf(t.getMonth() + 1);
+                    break;
+                case 'mm':
+                    return tf(t.getMinutes());
+                    break;
+                case 'dd':
+                    return tf(t.getDate());
+                    break;
+                case 'HH':
+                    return tf(t.getHours());
+                    break;
+                case 'ss':
+                    return tf(t.getSeconds());
+                    break;
+            }
+        })
+    }
+    
+    window.onload=function(){
+        var format = "yyyy-MM-dd HH:mm:ss";
+        #foreach($obj in $objs)
+            var t1 = document.getElementById("$!{obj.sensorName}_td");
+            t1.innerHTML = #if($!{obj.baseStartTime}==0) 0 #else dateFormat($!{obj.baseStartTime}, format) #end ;
+            var t2 = document.getElementById("$!{obj.sensorName}_sampletimetd");
+            t2.innerHTML = #if($!{obj.sampleStartTime}==0) 0 #else dateFormat($!{obj.sampleStartTime}, format) #end ;
+        #end
+    }
+
+
+    function doQuery(){
+        var beginTimeStr = document.getElementById("beginTime").value;
+        var endTimeStr = document.getElementById("endTime").value;
+
+        if(beginTimeStr == "" || endTimeStr == ""){
+            alert("请选择时间!");
+            return;
+        }
+        // alert(beginTimeStr + "==" + endTimeStr);
+        //beginTimeStr = beginTimeStr + ":00"
+        //endTimeStr = endTimeStr + ":00"
+        var beginTimeInstance=Date.parse(beginTimeStr.replace(/-/g,"/"));
+        var endTimeInstance=Date.parse(endTimeStr.replace(/-/g,"/"));
+        if(beginTimeInstance >= endTimeInstance){
+            alert("采样时间必须大于开始时间!");
+            return;
+        }
+        document.ListForm.submit();
+    }
+
+    function getTrendAnalysisExcelReport(){
+        var sensorTypeName=jQuery("#sensorTypeName").val();
+        var monitorlineid=jQuery("#monitorlineid").val();
+        var sensorid=jQuery("#sensorid").val();
+        var beginTime=jQuery("#beginTime").val();
+        var endTime=jQuery("#endTime").val();
+        var hourSegment=jQuery("#hourSegment").val();
+        
+        if(beginTime == "" || endTime == ""){
+            alert("请选择时间!");
+            return;
+        }
+
+        var beginTimeDate=Date.parse(beginTime.replace(/-/g,"/"));
+        var endTimeDate=Date.parse(endTime.replace(/-/g,"/"));
+        //alert(beginTimeDate + "=="+ endTimeDate);
+        if(beginTimeDate > endTimeDate){
+            alert("采样时间必须大于开始时间!");
+            return;
+        }
+
+        var url="$!webPath/monitordata/sensortrendanalysisreport.htm?sensorTypeName="+sensorTypeName
+            +"&monitorlineid="+monitorlineid+"&sensorid="+sensorid+"&hourSegment="+hourSegment
+            +"&beginTime="+beginTime+"&endTime="+endTime;
+        var windowInstance = window.open(url);
+    }
+    </script>
+</head>
+<body class="info">
+$!httpInclude.include("/common/top.htm")
+<div class="main_bj"></div>
+<div class="main">
+    $!httpInclude.include("/common/head.htm")
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="user_table">
+    <tr> $!httpInclude.include("/common/menu_nav.htm?op=sensortrendanalysis")
+        <td id="centerbg" valign="top">
+        <div class="productmain">
+            <div class="ordercon">
+              <form method="post" name="ListForm" id="ListForm">
+                <div class="ordersear">
+                    <span>传感器类型:</span> 
+                    <span class="ordersel">
+                        <select name="sensorTypeName" id="sensorTypeName">
+                            <option value="" selected="selected">请选择</option>
+                            #foreach($sensorType in $sensorTypes)
+                            <option value="$!sensorType.name"  #if($!sensorTypeName==$!sensorType.name) selected="selected" #end>$!sensorType.displayName</option>
+                            #end
+                        </select>
+                    </span>
+                    <span>&nbsp;监测线:</span> 
+                    <span class="ordersel">
+                        <select name="monitorlineid" id="monitorlineid">
+                            <option value="" selected="selected">请选择</option>
+                            #foreach($monitorline in $monitorLines)
+                            <option value="$!monitorline.id"  #if($!monitorlineid==$!monitorline.id) selected="selected" #end>$!monitorline.name</option>
+                            #end
+                        </select>
+                    </span>
+                    <span>&nbsp;传感器:</span> 
+                    <span class="ordersel">
+                        <select name="sensorid" id="sensorid">
+                            <option value="" selected="selected">请选择</option>
+                            #foreach($sensor in $sensors)
+                            <option value="$!sensor.id" #if($!sensorid==$!sensor.id) selected="selected" #end>$!sensor.name</option>
+                            #end
+                        </select>
+                    </span>
+                    <span>&nbsp;&nbsp;开始时间:</span>
+                    <span class="ordersel">
+                        <input type="text" name="beginTime" id="beginTime" value="$!beginTime" style="width:105px;"/>
+                        <!-- <input type="text" value="" name="datetimepicker" id="datetimepicker"/>-->
+                    </span>
+                    <span>采样时间:</span>
+                    <span class="ordersel">
+                        <input type="text" name="endTime" id="endTime" value="$!endTime" style="width:105px;"/>
+                    </span>
+                    <script>
+                            jQuery.datetimepicker.setLocale('ch');
+                            //$('#beginTime').datetimepicker({lang:'ch'});
+                            $('#beginTime').datetimepicker({
+                                dayOfWeekStart : 1,
+                                lang:'ch',
+                                step:15
+                                    //,
+                                //disabledDates:['1986/01/08','1986/01/09','1986/01/10']
+                                //startDate:    '2016/04/15'
+                            });
+                            // $('#beginTime').datetimepicker({step:15});
+
+                            $('#endTime').datetimepicker({
+                                dayOfWeekStart : 1,
+                                lang:"ch"
+                                    //,
+                                //disabledDates:['1986/01/08','1986/01/09','1986/01/10'],
+                                //startDate:    '2016/04/15'
+                            });
+                            $('#endTime').datetimepicker({step:15});
+                            //$('#endTime').datetimepicker({lang:'ch'});
+                    </script>
+                    <span>时间段:</span>
+                    <span class="ordersel">
+                       <select name="hourSegment" id="hourSegment">
+                            <option value="0" #if($!hourSegment==0) selected="selected" #end>0</option>
+                            <option value="0.1" #if($!hourSegment==0.1) selected="selected" #end>0.1</option>
+                            <option value="0.25" #if($!hourSegment==0.25) selected="selected" #end>0.25</option>
+                            <option value="0.5" #if($!hourSegment==0.5) selected="selected" #end>0.5</option>
+                            <option value="0.75" #if($!hourSegment==0.75) selected="selected" #end>0.75</option>
+                            <option value="1" #if($!hourSegment==1) selected="selected" #end>1</option>
+                            <option value="2" #if($!hourSegment==2) selected="selected" #end>2</option>
+                            <option value="3" #if($!hourSegment==3) selected="selected" #end>3</option>
+                            <option value="4" #if($!hourSegment==4) selected="selected" #end>4</option>
+                            <option value="5" #if($!hourSegment==5) selected="selected" #end>5</option>
+                            <option value="6" #if($!hourSegment==6) selected="selected" #end>6</option>
+                            <option value="7" #if($!hourSegment==7) selected="selected" #end>7</option>
+                            <option value="8" #if($!hourSegment==8) selected="selected" #end>8</option>
+                            <option value="9" #if($!hourSegment==9) selected="selected" #end>9</option>
+                            <option value="10" #if($!hourSegment==10) selected="selected" #end>10</option>
+                            <option value="11" #if($!hourSegment==11) selected="selected" #end>11</option>
+                            <option value="12" #if($!hourSegment==12) selected="selected" #end>12</option>
+                            <option value="13" #if($!hourSegment==13) selected="selected" #end>13</option>
+                            <option value="14" #if($!hourSegment==14) selected="selected" #end>14</option>
+                            <option value="15" #if($!hourSegment==15) selected="selected" #end>15</option>
+                            <option value="16" #if($!hourSegment==16) selected="selected" #end>16</option>
+                            <option value="17" #if($!hourSegment==17) selected="selected" #end>17</option>
+                            <option value="18" #if($!hourSegment==18) selected="selected" #end>18</option>
+                            <option value="19" #if($!hourSegment==19) selected="selected" #end>19</option>
+                            <option value="20" #if($!hourSegment==20) selected="selected" #end>20</option>
+                            <option value="21" #if($!hourSegment==21) selected="selected" #end>21</option>
+                            <option value="22" #if($!hourSegment==22) selected="selected" #end>22</option>
+                            <option value="23" #if($!hourSegment==23) selected="selected" #end>23</option>
+                            <option value="24" #if($!hourSegment==24) selected="selected" #end>24</option>
+                        </select>(小时)
+                    </span>
+                    <span class="orderbtn">
+                        <input name="" type="button" value="查询" style="cursor:pointer;" onclick="doQuery()"/>
+                        #if($!logined_userrole=="ADMIN")
+                        <input name="" type="button" value="报表" style="cursor:pointer;" onclick="getTrendAnalysisExcelReport()"/>
+                        #else
+                        #end
+                    </span>
+                </div>
+
+                <div class="operation">
+                  <table width="1039" border="0" cellspacing="0" cellpadding="0" id="opertable" >
+                    <tr id="opertitle">
+                      <td width="15%"><b>传感器类型</b></td>
+                      <td width="11%"><b>传感器名称</b></td>
+                      <td width="15%"><b>起始时间</b></td>
+                      <td width="11%"><b>起始值</b></td>
+                      <td width="15%"><b>采样时间</b></td>
+                      <td width="11%"><b>采样值</b></td>
+                      <td width="11%"><b>沉降量</b></td>
+                      <td width="11%"><b>单位</b></td>
+                    </tr>
+                  #foreach($obj in $objs)
+                    #if($!obj.base == "true")
+                    <tr>
+                      <td>
+                        $!SensorTypes.get($!obj.sensorType)
+                      </td>
+                      <td>$!{obj.sensorName}</td>
+                      <td id="$!{obj.sensorName}_td"></td>
+                      <td>基准点</td>
+                      <td id="$!{obj.sensorName}_sampletimetd"></td>
+                      <td>基准点</td>
+                      <td>基准点</td>
+                      <td>$!{obj.unit}</td>
+                    </tr>
+                    #else
+                    <tr>
+                      <td>
+                        $!SensorTypes.get($!obj.sensorType)
+                      </td>
+                      <td>$!{obj.sensorName}</td>
+                      <td id="$!{obj.sensorName}_td"></td>
+                      <td>$!{obj.baseAverageValue}</td>
+                      <td id="$!{obj.sensorName}_sampletimetd"></td>
+                      <td>$!{obj.sampleAverageValue}</td>
+                      <td>$!{obj.sinkingData}</td>
+                      <td>$!{obj.unit}</td>
+                    </tr>
+                    #end
+                  #end
+
+                  </table>
+                </div>
+                <div class="alldel">
+                  <div  class="userfenye">
+                    <input name="currentPage" type="hidden" id="currentPage" value="$!currentPage" />
+                  $!gotoPageFormHTML</div>
+                </div>
+              </form>
+            </div>
+          </div></td>
+      </tr>
+    </table>
+    <div class="footer">
+    $!httpInclude.include("/common/bottom.htm")
+    </div>
+  </div>
+
+<!--返回最顶部-->
+<!--
+<div class="back_box"  style=" display:none;width:50px; height:50px;position:fixed; bottom:180px; right:25px;">
+    <div class="back_index"><a href="./index.htm"  title="返回主页"></a></div>
+    <div class="back_top"><a id="toTop" href="#" bosszone="hometop" style="display: block;" onclick="window.scrollTo(0,0);return false" title="返回顶部" target="_self" ></a></div>
+</div>
+-->
+<script type="text/javascript">
+    jQuery(".notice").slide({ titCell:".tab-hd li", mainCell:".tab-bd",delayTime:0 });
+</script>
+</body>
+<script>
+/*
+    $.beginTime.setLocale('ch');
+    $('#beginTime').datetimepicker({
+        dayOfWeekStart : 1,
+        lang:'zh',
+        disabledDates:['1986/01/08','1986/01/09','1986/01/10'],
+        startDate:  '2016/04/15'
+    });
+    $('#beginTime').datetimepicker({value:'2016/04/15 08:00', step:10});
+    jQuery.datetimepicker.setLocale('ch');
+    
+    $.endTime.setLocale('ch');
+    $('#endTime').datetimepicker({
+        dayOfWeekStart : 1,
+        lang:"ch",
+        disabledDates:['1986/01/08','1986/01/09','1986/01/10'],
+        startDate:  '2016/04/15'
+    });
+    $('#endTime').datetimepicker({value:'2016/04/15 08:00', step:10});
+*/
+</script>
+</html>

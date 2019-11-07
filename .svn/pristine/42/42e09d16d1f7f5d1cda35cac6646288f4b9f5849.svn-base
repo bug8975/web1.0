@@ -1,0 +1,99 @@
+@charset "utf-8";
+/* CSS Document */
+
+#map {
+	width: 100%;
+	height: 650px;
+	padding:10px 0px;
+}
+
+#menu {
+	width: 100%;
+	height: 20px;
+	padding: 5px 0px; 
+	/*left: 10px;*/
+	font-size: 14px;
+	font-family: '微软雅黑';
+	background-color:gray;
+}
+
+#mouse-position {
+	float: right;
+/*
+	position: absolute;
+	bottom: 5px;
+	width: 200px;
+	height: 20px;
+	z-index: 2000;
+*/
+}
+
+.custom-mouse-position {
+	color: red;
+	font-size: 16px;
+	font-family: '微软雅黑';
+}
+.marker {
+	width: 20px;
+	height: 20px;
+	border: 1px solid #088;
+	border-radius: 10px;
+	background-color: green;
+	opacity: 0.5;
+}
+.address {
+	text-decoration: none;
+	color: #aa3300;
+	font-size: 14px;
+	font-weight: bold;
+	text-shadow: black 0.1em 0.1em 0.2em;
+}
+.ol-popup {
+	position: absolute;
+	background-color: lightgray;
+	-webkit-filter: drop-shadow(0 1px 4px rgba(0,0,0,0.2));
+	filter: drop-shadow(0 1px 4px rgba(0,0,0,0.2));
+	padding: 15px;
+	border-radius: 10px;
+	border: 1px solid #cccccc;
+	bottom: 12px;
+	left: -50px;
+}
+.ol-popup:after, .ol-popup:before {
+	top: 100%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+.ol-popup:after {
+	border-top-color: white;
+	border-width: 10px;
+	left: 48px;
+	margin-left: -10px;
+}
+.ol-popup:before {
+	border-top-color: #cccccc;
+	border-width: 11px;
+	left: 48px;
+	margin-left: -11px;
+}
+.ol-popup-closer {
+	text-decoration: none;
+	position: absolute;
+	top: 2px;
+	right: 8px;
+}
+.ol-popup-closer:after {
+	content: "✖";
+}
+#popup-content {
+	font-size: 14px;
+	font-family: "微软雅黑";
+}
+#popup-content .markerInfo {
+	font-weight: bold;
+	text-decoration:none;
+}

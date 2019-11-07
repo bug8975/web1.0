@@ -1,0 +1,336 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>定时设置-MonitorSys</title>
+<meta name="keywords" content="$!config.keywords" />
+<meta name="description" content="$!config.description" />
+<link href="$!webPath/resources/style/common/css/public_hj.css"
+	rel="stylesheet" type="text/css" />
+<link href="$!webPath/resources/style/common/css/index_hj.css"
+	rel="stylesheet" type="text/css" />
+<link
+	href="$!webPath/resources/style/common/css/jquery-ui-1.8.22.custom.css"
+	type="text/css" rel="stylesheet" />
+<link href="$!webPath/resources/css/user.css" type="text/css"
+	rel="stylesheet" />
+
+		<link rel="stylesheet" type="text/css" href="$!webPath/resources/bootstrap/css/cloud-admin.css">
+		<link rel="stylesheet" type="text/css" href="$!webPath/resources/bootstrap/css/themes/default.css" id="skin-switcher">
+		<link rel="stylesheet" type="text/css" href="$!webPath/resources/bootstrap/css/responsive.css">
+		
+		<!-- STYLESHEETS -->
+		<!--[if lt IE 9]><script src="js/flot/excanvas.min.js"></script><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script><![endif]-->
+		<link href="$!webPath/resources/bootstrap/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+		<!-- ANIMATE -->
+		<link rel="stylesheet" type="text/css" href="$!webPath/resources/bootstrap/css/animatecss/animate.min.css" />
+		<!-- DATE RANGE PICKER -->
+		<link rel="stylesheet" type="text/css" href="$!webPath/resources/bootstrap/js/bootstrap-daterangepicker/daterangepicker-bs3.css" />
+		<!-- TODO -->
+		<link rel="stylesheet" type="text/css" href="$!webPath/resources/bootstrap/js/jquery-todo/css/styles.css" />
+		<!-- FULL CALENDAR -->
+		<link rel="stylesheet" type="text/css" href="$!webPath/resources/bootstrap/js/fullcalendar/fullcalendar.min.css" />
+		<!-- GRITTER -->
+		<link rel="stylesheet" type="text/css" href="$!webPath/resources/bootstrap/js/gritter/css/jquery.gritter.css" />
+		<!-- FONTS -->
+		<link href='http://fonts.useso.com/css?family=Open+Sans:300,400,600,700' rel='stylesheet' type='text/css'>
+		<!-- 自定义CSS样式 -->
+		<link rel="stylesheet" type="text/css" href="$!webPath/resources/bootstrap/css/custom/default.css">
+<script type="text/javascript"
+	src="$!webPath/resources/js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="$!webPath/resources/js/public_hj.js"></script>
+<script src="$!webPath/resources/js/jquery-1.6.2.js"></script>
+<script src="$!webPath/resources/js/jquery-ui-1.8.21.js"></script>
+<script src="$!webPath/resources/js/jquery.shop.common.js"></script>
+<script src="$!webPath/resources/js/highstock.js"></script>
+<script src="$!webPath/resources/js/exporting.js"></script>
+<script>
+jQuery(document).ready(function(){
+    jQuery("#hourSegment").change(function(){
+        //var level=jQuery(this).attr("level");
+        var hour=jQuery(this).val();
+        // alert("sensorTypeName:" + sensorTypeName);
+        if(hour!=""){
+            $("#minuteSegment").attr("disabled","disabled");
+            $("#secondSegment").attr("disabled","disabled");
+        }else{
+            $("#minuteSegment").removeAttr("disabled");
+            $("#secondSegment").removeAttr("disabled");
+        }
+    });
+    jQuery("#minuteSegment").change(function(){
+        //var level=jQuery(this).attr("level");
+        var minute=jQuery(this).val();
+        // alert("sensorTypeName:" + sensorTypeName);
+        if(minute!=""){
+            $("#hourSegment").attr("disabled","disabled");
+            $("#secondSegment").attr("disabled","disabled");
+        }else{
+            $("#hourSegment").removeAttr("disabled");
+            $("#secondSegment").removeAttr("disabled");
+        }
+    });
+    jQuery("#secondSegment").change(function(){
+        //var level=jQuery(this).attr("level");
+        var second=jQuery(this).val();
+        // alert("sensorTypeName:" + sensorTypeName);
+        if(second!=""){
+            $("#hourSegment").attr("disabled","disabled");
+            $("#minuteSegment").attr("disabled","disabled");
+        }else{
+            $("#hourSegment").removeAttr("disabled");
+            $("#minuteSegment").removeAttr("disabled");
+        }
+    });
+});
+function changeTimer(){
+    var hour = jQuery("#hourSegment").val();
+    var minute = jQuery("#minuteSegment").val();
+    var second = jQuery("#secondSegment").val();
+    var d = new Date();
+    var strTime = null;
+    if(hour != ""){
+    	strTime = d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate() + " " + hour + ":00:00"; 
+    }else if(minute != ""){
+    	strTime = d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate() + " 00:" + minute + ":00"; 
+    }else if(second != ""){
+    	strTime = d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate() + " 00:00:" + second; 
+    }else{
+    	alert("请选择时间间隔");
+    }
+    if(strTime != null){
+    	alert(strTime);
+        jQuery.post("$!webPath/deviceapp/modifyTime.htm",{"time":strTime},function(resultString){
+             alert(resultString);
+             location.href = "$!webPath/deviceapp/timermodify.htm";
+        },"text");
+    }
+}
+
+
+</script>
+</head>
+<body class="info">
+
+	<!-- 头部页眉 -->
+	$!httpInclude.include("/common/top.htm")
+	<!-- over -->
+
+	<!-- PAGE -->
+	<section id="page"> <!-- 侧边栏 -->
+	$!httpInclude.include("/common/menu_nav.htm") <!-- over -->
+	<div id="main-content">
+		<!-- SAMPLE BOX CONFIGURATION MODAL FORM-->
+
+		<!-- /SAMPLE BOX CONFIGURATION MODAL FORM-->
+		<div class="container">
+			<div class="row">
+				<div id="content" class="col-lg-12">
+					<!-- PAGE HEADER-->
+					<div class="row">$!httpInclude.include("/common/head.htm")</div>
+					<!-- /PAGE HEADER -->
+					<!-- DASHBOARD CONTENT -->
+					<!-- 数据看板 -->
+					<!-- DASHBOARD CONTENT -->
+					<div class="row">
+						<table width="100%" border="0" cellspacing="0" cellpadding="0"
+							class="user_table">
+							<td id="centerbg" valign="top">
+								<div class="productmain">
+									<div class="ordercon">
+										<form method="post" name="ListForm" id="ListForm">
+											<div class="ordersear">
+												<span>定时任务间隔修改：</span> <span
+													style="float: right; padding-right: 50px">
+													#if($!hour!="00") 当前间隔:<a
+													style="font-size: 20px; color: blue"> $!hour</a>小时 #else
+													#if($!minute!="00") 当前间隔:<a
+													style="font-size: 20px; color: blue"> $!minute</a>分钟 #else
+													#if($!second!="00") 当前间隔:<a
+													style="font-size: 20px; color: blue"> $!second</a>秒 #else
+													#end #end #end
+												</span>
+											</div>
+											<div class="operation">
+												<table width="100%" border="0" cellspacing="0"
+													cellpadding="0" id="opertable">
+													<tr id="opertitle">
+														<!-- <td width="15%"><b>年</b></td>
+                                            <td width="14%"><b>月</b></td>
+                                            <td width="14%"><b>日</b></td> -->
+														<td width="14%"><b>小时</b></td>
+														<td width="14%"><b>分</b></td>
+														<td width="14%"><b>秒</b></td>
+														<td width="15%"><b>设置状态</b></td>
+													</tr>
+													<tr>
+														<!--  <td width="14%">
+                                                <select>
+                                                    <option value="">$!year</option>
+                                                </select>
+                                            </td>
+                                            <td width="14%">
+                                                <select>
+                                                    <option value="">$!month</option>
+                                                </select>
+                                            </td>
+                                            <td width="14%">
+                                                <select>
+                                                    <option value="">$!day</option>
+                                                </select>
+                                            </td> -->
+														<td width="14%"><select name="hourSegment"
+															id="hourSegment">
+																<option value="" #if($!hourSegment==0)
+																	selected="selected" #end>0</option>
+																<option value="1" #if($!hourSegment==1)
+																	selected="selected" #end>1</option>
+																<option value="2" #if($!hourSegment==2)
+																	selected="selected" #end>2</option>
+																<option value="3" #if($!hourSegment==3)
+																	selected="selected" #end>3</option>
+																<option value="4" #if($!hourSegment==4)
+																	selected="selected" #end>4</option>
+																<option value="6" #if($!hourSegment==6)
+																	selected="selected" #end>6</option>
+																<option value="8" #if($!hourSegment==8)
+																	selected="selected" #end>8</option>
+																<option value="12" #if($!hourSegment==12)
+																	selected="selected" #end>12</option>
+														</select></td>
+														<td width="14%"><select name="minuteSegment"
+															id="minuteSegment">
+																<option value="" #if($!hourSegment==0)
+																	selected="selected" #end>0</option>
+																<option value="10" #if($!minuteSegment==10)
+																	selected="selected" #end>10</option>
+																<option value="20" #if($!minuteSegment==20)
+																	selected="selected" #end>20</option>
+																<option value="30" #if($!minuteSegment==30)
+																	selected="selected" #end>30</option>
+														</select></td>
+														<td width="14%"><select name="secondSegment"
+															id="secondSegment">
+																<option value="" #if($!hourSegment==0)
+																	selected="selected" #end>0</option>
+																<option value="10" #if($!secondSegment==10)
+																	selected="selected" #end>10</option>
+																<option value="20" #if($!secondSegment==20)
+																	selected="selected" #end>20</option>
+																<option value="30" #if($!secondSegment==30)
+																	selected="selected" #end>30</option>
+														</select></td>
+														<td width="15%"><span class="orderbtn"
+															style="width: 100%; float: right"> <input
+																name="updateButton" id="setTimer" type="button"
+																value="设置" onclick="changeTimer()" />
+														</span></td>
+													</tr>
+												</table>
+											</div>
+										</form>
+									</div>
+								</div> <!-- div-productmain END -->
+							</td>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</section>
+	<!--返回最顶部-->
+	<!--
+<div class="back_box"  style=" display:none;width:50px; height:50px;position:fixed; bottom:180px; right:25px;">
+    <div class="back_index"><a href="./index.htm"  title="返回主页"></a></div>
+    <div class="back_top"><a id="toTop" href="#" bosszone="hometop" style="display: block;" onclick="window.scrollTo(0,0);return false" title="返回顶部" target="_self" ></a></div>
+</div>
+-->
+
+
+
+	<script type="text/javascript">
+    jQuery(".notice").slide({ titCell:".tab-hd li", mainCell:".tab-bd",delayTime:0 });
+</script>
+
+	<!-- JAVASCRIPTS -->
+	<!-- Placed at the end of the document so the pages load faster -->
+	<!-- JQUERY -->
+	<script
+		src="$!webPath/resources/bootstrap/js/jquery/jquery-2.0.3.min.js"></script>
+	<!-- JQUERY UI-->
+	<script
+		src="$!webPath/resources/bootstrap/js/jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.min.js"></script>
+	<!-- BOOTSTRAP -->
+	<script
+		src="$!webPath/resources/bootstrap/bootstrap-dist/js/bootstrap.min.js"></script>
+
+
+	<!-- DATE RANGE PICKER -->
+	<script
+		src="$!webPath/resources/bootstrap/js/bootstrap-daterangepicker/moment.min.js"></script>
+
+	<script
+		src="$!webPath/resources/bootstrap/js/bootstrap-daterangepicker/daterangepicker.min.js"></script>
+	<!-- SLIMSCROLL -->
+	<script type="text/javascript"
+		src="$!webPath/resources/bootstrap/js/jQuery-slimScroll-1.3.0/jquery.slimscroll.min.js"></script>
+	<!-- SLIMSCROLL -->
+	<script type="text/javascript"
+		src="$!webPath/resources/bootstrap/js/jQuery-slimScroll-1.3.0/jquery.slimscroll.min.js"></script>
+	<script type="text/javascript"
+		src="$!webPath/resources/bootstrap/js/jQuery-slimScroll-1.3.0/slimScrollHorizontal.min.js"></script>
+	<!-- BLOCK UI -->
+	<script type="text/javascript"
+		src="$!webPath/resources/bootstrap/js/jQuery-BlockUI/jquery.blockUI.min.js"></script>
+	<!-- SPARKLINES -->
+	<script type="text/javascript"
+		src="$!webPath/resources/bootstrap/js/sparklines/jquery.sparkline.min.js"></script>
+	<!-- EASY PIE CHART -->
+	<script
+		src="$!webPath/resources/bootstrap/js/jquery-easing/jquery.easing.min.js"></script>
+	<script type="text/javascript"
+		src="$!webPath/resources/bootstrap/js/easypiechart/jquery.easypiechart.min.js"></script>
+	<!-- FLOT CHARTS -->
+	<script src="$!webPath/resources/bootstrap/js/flot/jquery.flot.min.js"></script>
+	<script
+		src="$!webPath/resources/bootstrap/js/flot/jquery.flot.time.min.js"></script>
+	<script
+		src="$!webPath/resources/bootstrap/js/flot/jquery.flot.selection.min.js"></script>
+	<script
+		src="$!webPath/resources/bootstrap/js/flot/jquery.flot.resize.min.js"></script>
+	<script
+		src="$!webPath/resources/bootstrap/js/flot/jquery.flot.pie.min.js"></script>
+	<script
+		src="$!webPath/resources/bootstrap/js/flot/jquery.flot.stack.min.js"></script>
+	<script
+		src="$!webPath/resources/bootstrap/js/flot/jquery.flot.crosshair.min.js"></script>
+	<!-- TODO -->
+	<script type="text/javascript"
+		src="$!webPath/resources/bootstrap/js/jquery-todo/js/paddystodolist.js"></script>
+	<!-- TIMEAGO -->
+	<script type="text/javascript"
+		src="$!webPath/resources/bootstrap/js/timeago/jquery.timeago.min.js"></script>
+	<!-- FULL CALENDAR -->
+	<script type="text/javascript"
+		src="$!webPath/resources/bootstrap/js/fullcalendar/fullcalendar.min.js"></script>
+	<!-- COOKIE -->
+	<script type="text/javascript"
+		src="$!webPath/resources/bootstrap/js/jQuery-Cookie/jquery.cookie.min.js"></script>
+	<!-- GRITTER -->
+	<script type="text/javascript"
+		src="$!webPath/resources/bootstrap/js/gritter/js/jquery.gritter.min.js"></script>
+	<!-- CUSTOM SCRIPT -->
+	<script src="$!webPath/resources/bootstrap/js/script.js"></script>
+	<script>
+			jQuery(document).ready(function() {
+				App.setPage("Home"); //Set current page
+				App.init(); //Initialise plugins and elements
+			});
+		</script>
+	<!-- /JAVASCRIPTS -->
+	<script type="text/javascript">
+    jQuery(".notice").slide({ titCell:".tab-hd li", mainCell:".tab-bd",delayTime:0 });
+</script>
+</body>
+</html>

@@ -1,0 +1,191 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>静力水准设定-MonitorSys</title>
+<meta name="keywords" content="$!config.keywords" />
+<meta name="description" content="$!config.description" />
+<link rel="shortcut icon" type="image/x-icon" href="" />
+<link href="$!webPath/resources/style/common/css/public_hj.css" rel="stylesheet" type="text/css" />
+<link href="$!webPath/resources/style/common/css/index_hj.css" rel="stylesheet" type="text/css" />
+<link href="$!webPath/resources/style/common/css/jquery-ui-1.8.22.custom.css" type="text/css" rel="stylesheet" />
+<link href="$!webPath/resources/css/user.css" type="text/css" rel="stylesheet" />
+
+<script type="text/javascript" src="$!webPath/resources/js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="$!webPath/resources/js/public_hj.js"></script>
+<script src="$!webPath/resources/js/jquery-1.6.2.js"></script>
+<script src="$!webPath/resources/js/jquery-ui-1.8.21.js"></script>
+<script src="$!webPath/resources/js/jquery.shop.common.js"></script>
+<script src="$!webPath/resources/js/highstock.js"></script>
+<script src="$!webPath/resources/js/exporting.js"></script>
+<script>
+jQuery(document).ready(function(){
+  jQuery('#compareTime').datepicker({
+	  dateFormat:"yy-mm-dd",
+	  changeMonth: true,
+	  changeYear: true,
+	  monthNamesShort: ['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+      dayNamesMin: ['日','一','二','三','四','五','六']
+  });
+});
+
+function dateFormat(timeMs, format){
+    var t = new Date(timeMs);
+    var tf = function(i){return (i < 10 ? '0' : '') + i};
+    return format.replace(/yyyy|MM|dd|HH|mm|ss/g, function(a){
+        switch(a){
+            case 'yyyy':
+                return tf(t.getFullYear());
+                break;
+            case 'MM':
+                return tf(t.getMonth() + 1);
+                break;
+            case 'dd':
+                return tf(t.getDate());
+                break;
+            case 'HH':
+                return tf(t.getHours());
+                break;
+            case 'mm':
+                return tf(t.getMinutes());
+                break;
+            case 'ss':
+                return tf(t.getSeconds());
+                break;
+        }
+    })
+}
+
+window.onload=function(){
+    var format = "yyyy-MM-dd";
+    #foreach($obj in $trendanalysis)
+        var time = document.getElementById("$!obj.{sensorType}_time");
+        var interval = document.getElementById("$!obj.{sensorType}_interval");
+        time.innerHTML = dateFormat($!{obj.compareTime}, format);
+        interval.innerHTML = $!{obj.trendInterval} / (60 * 1000) +"分钟"; 
+    #end
+}
+
+function trendMsgModify(){
+    var compareTime = document.getElementById("compareTime").value;
+    if(compareTime == ""){
+        alert("请选择时间!");
+        return;
+    }
+    var interval = document.getElementById("trendInterval").value;
+    if(interval == ""){
+        alert("请添加时间间隔!");
+        return;
+    }
+    var monitorlineid = document.getElementById("monitorlineid").value;
+    if(monitorlineid == ""){
+    	alert("请选择监测线！");
+    	return;
+    }
+    document.ListForm.submit();
+}
+
+function trendMsgDelete(id){
+	jQuery.post("$!webPath/deviceapp/trendDelete.htm",{"monitorlineid":id},function(data){
+        jQuery.each(data, function(index,item){
+        	if(item.status == 1){
+                alert("修改成功");
+                location.href = "$!webPath/deviceapp/trendanalysis.htm";
+            }else{
+                alert("修改失败");
+            }
+        });
+    },"json");
+}
+</script>
+
+
+
+</head>
+<body class="info">
+$!httpInclude.include("/common/top.htm")
+<div class="main_bj"></div>
+<div class="main">
+    $!httpInclude.include("/common/head.htm")
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="user_table">
+    <tr>
+        $!httpInclude.include("/common/menu_nav.htm?op=trendanalysis")
+        <td id="centerbg" valign="top">
+        	<div class="productmain">
+             <div class="ordercon">
+              <form method="post" name="ListForm" id="ListForm">
+                <div class="ordersear">
+                  	<span class="px10">&nbsp;&nbsp;&nbsp;时间:</span> 
+                  	<span class="ordersel">
+                  		<input name="compareTime" type="text" id="compareTime" value="" readonly="readonly" style="width:80px;"/>
+                  	</span>
+                  	<span>&nbsp;&nbsp;&nbsp;监测线:</span> 
+                    <span class="ordersel">
+                        <select name="monitorlineid" id="monitorlineid">
+                            <option value="" selected="selected">请选择</option>
+                            #foreach($monitorline in $monitorLines)
+                            <option value="$!monitorline.id"  #if($!monitorlineid==$!monitorline.id) selected="selected" #end>$!monitorline.name</option>
+                            #end
+                        </select>
+                    </span>
+                  	<span class="px10">&nbsp;&nbsp;&nbsp;间隔:</span> 
+                    <span class="ordersel">
+                        <input name="trendInterval" type="text" id="trendInterval" value=""  style="width:80px;"/>分
+                    </span>&nbsp;&nbsp;
+                  	<span class="orderbtn">
+                  		<input name="" type="button" value="修改" style="cursor:pointer;" onclick="trendMsgModify()"/>
+                  	</span>
+                </div>
+                </form>
+              </div>
+                
+              <div class="operation">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0" id="opertable" >
+                    <tr id="opertitle">
+                    	<td width="20%">传感器类型</td>
+                    	<td width="20%">监测线</td>
+                    	<td width="20%">时间</td>
+                        <td width="20%">间隔</td>
+                        <td width="20%">操作</td>
+                    </tr>
+                    #foreach($obj in $trendanalysis)
+                        <tr>
+                        <td>$!SensorTypes.get($!obj.sensorType)</td>
+                         #foreach($monitorline in $monitorLines)
+                            #if($!obj.monitorLine_id == $!monitorline.id)
+                            <td value="$!obj.monitorLine_id">$!monitorline.name</td>
+                            #end
+                         #end
+                        <td id="$!obj.{sensorType}_time"></td>
+                        <td id="$!obj.{sensorType}_interval"></td>
+                        #foreach($monitorline in $monitorLines)
+                            #if($!obj.monitorLine_id == $!monitorline.id)
+                            <td><input name="" type="button" value="删除" style="cursor:pointer;" onclick="trendMsgDelete($!obj.monitorLine_id)"/></td>
+                            #end
+                         #end
+                        </tr>
+                    #end
+                </table>
+        		<div id="container" style="height: 550px; min-width: 310px"></div>
+        	</div>
+        	</div><!-- div-productmain END -->
+        </td>
+      </tr>
+    </table>
+    <div class="footer">
+    $!httpInclude.include("/common/bottom.htm")
+	</div>
+  </div>
+
+<!--返回最顶部-->
+<!--
+<div class="back_box"  style=" display:none;width:50px; height:50px;position:fixed; bottom:180px; right:25px;">
+    <div class="back_index"><a href="./index.htm"  title="返回主页"></a></div>
+    <div class="back_top"><a id="toTop" href="#" bosszone="hometop" style="display: block;" onclick="window.scrollTo(0,0);return false" title="返回顶部" target="_self" ></a></div>
+</div>
+-->
+<script type="text/javascript">
+    jQuery(".notice").slide({ titCell:".tab-hd li", mainCell:".tab-bd",delayTime:0 });
+</script>
+</body>
+</html>

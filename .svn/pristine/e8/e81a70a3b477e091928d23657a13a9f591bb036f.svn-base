@@ -1,0 +1,212 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>人工导入-MonitorSys</title>
+<meta name="keywords" content="$!config.keywords" />
+<meta name="description" content="$!config.description" />
+
+<link
+	href="$!webPath/resources/style/common/css/jquery-ui-1.8.22.custom.css"
+	type="text/css" rel="stylesheet" />
+<link href="$!webPath/resources/style/common/css/public_hj.css"
+	rel="stylesheet" type="text/css" />
+<link href="$!webPath/resources/style/common/css/index_hj.css"
+	rel="stylesheet" type="text/css" />
+<link href="$!webPath/resources/css/user.css" type="text/css"
+	rel="stylesheet" />
+<link href="$!webPath/resources/css/jquery.datetimepicker.css"
+	type="text/css" rel="stylesheet" />
+<script type="text/javascript"
+	src="$!webPath/resources/js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="$!webPath/resources/js/public_hj.js"></script>
+<script src="$!webPath/resources/js/jquery.shop.common.js"></script>
+<script src="$!webPath/resources/js/jquery-1.10.2.js"></script>
+<script src="$!webPath/resources/js/jquery.datetimepicker.full.js"></script>
+<script src="$!webPath/resources/js/jquery-ui-1.8.21.js"></script>
+<script src="$!webPath/resources/js/jquery.datetimepicker.full.js"></script>
+
+<script type="text/javascript">
+function reload() {
+    location.reload();  
+}
+
+jQuery(document).ready(function(){
+    $("#button_import").click(function(){
+    	var collectTime=jQuery("#collectTime").val();
+
+        if(collectTime == ""){
+            alert("请选择时间!");
+            return;
+        }
+        jQuery.post("$!webPath/manimportDataOk.htm",function(data){
+            jQuery.each(data, function(index,item){
+                alert( item.count);
+            });
+            location.href = "$!webPath/picreport/manpowerdataimport.htm";
+        },"json");
+    });
+    
+    $("#button_cancel").click(function(){
+        jQuery.post("$!webPath/manimportDataCancel.htm", function(data) {
+            console.log("Import Cancel: " + data.msg);
+            location.href = "$!webPath/picreport/manpowerdataimport.htm";
+        });
+    });
+    
+});
+
+</script>
+<style>
+* {
+	font-family: '华文细黑';
+}
+
+#topbar {
+	width: 100%;
+	height: 40px;
+	background-color: gray;
+}
+
+#contable {
+	border: none;
+	border-bottom: 2px solid #E4E4E4;
+	width: 100%
+}
+
+#contable td {
+	border: 0px;
+	border-top: 1px solid #E4E4E4;
+	padding-left: 10px;
+	padding-top: 10px;
+	padding-bottom: 7px;
+}
+
+#contitle td {
+	border-bottom: 1px solid #AEC7E5;
+	border-top: 1px solid #AEC7E5;
+}
+</style>
+
+</head>
+<body class="info">
+	$!httpInclude.include("/common/top.htm")
+	<div class="main_bj"></div>
+	<div class="main">
+		$!httpInclude.include("/common/head.htm")
+		<table width="100%" border="0" cellspacing="0" cellpadding="0"
+			class="user_table">
+
+			<tr>
+				$!httpInclude.include("/common/menu_nav.htm?op=manpowerimport")
+				<td id="centerbg" valign="top">
+					<div class="productmain">
+						<form action="$!webPath/picreport/manpowerimportData.htm"
+							method="post" enctype="multipart/form-data" id="ListForm">
+							<div class="ordercon">
+								<div style="width: 100%;">
+									<div id="topbar" style="color: white">
+										<div style="width: 100%; padding: 5px; float: left">
+											<span class="ordersel"> <input type="file" name="file"
+												id="file" />
+											</span> <span class="ordersel"> <input type="text"
+												name="collectTime" id="collectTime" value="$!collectTime"
+												style="width: 105px;" placeholder="采集时间" />
+											</span> <span class="ordersel">
+												<button type="submit" style="margin-left: 60px;">
+													<b>导入数据文件</b>
+												</button>
+											</span>
+											<script>
+	                                            jQuery.datetimepicker.setLocale('ch');
+	                                            $('#collectTime').datetimepicker({
+	                                                dayOfWeekStart : 1,
+	                                                lang:'ch',
+	                                                step:15
+	                                                    //,
+	                                            });
+	                                            // $('#beginTime').datetimepicker({step:15});
+	                                        </script>
+											<br />
+										</div>
+									</div>
+									<!-- <div style="padding: 20px; float: right">
+									    <b style="padding-top: 1px; color: #FF8800;">&nbsp;&nbsp;$!errorMsg</b>
+									</div> -->
+								</div>
+								<div id="content" style="padding-bottom: 40px">
+									<table id="contable" border="0" cellspacing="0" cellpadding="0">
+										<tbody>
+											<tr id="contitle">
+												<td width="5%"><b>行号</b></td>
+												<td width="10%"><b>观测方向</b></td>
+												<td width="5%"><b>点名</b></td>
+												<td width="10%"><b>水准度数</b></td>
+												<td width="5%"><b>合格？</b></td>
+												<td width="10%"><b>前后视距长</b></td>
+												<td width="5%"><b>合格？</b></td>
+												<td width="10%"><b>前后视距差</b></td>
+												<td width="5%"><b>合格？</b></td>
+												<td width="10%"><b>累积视距差</b></td>
+												<td width="5%"><b>合格？</b></td>
+												<td width="10%"><b>高差之差(mm)</b></td>
+												<td width="5%"><b>合格？</b></td>
+											</tr>
+											#foreach($list in $show)
+											<tr>
+												<td>$!{list.line}</td>
+												<td>$!{list.view}</td>
+												<td>$!{list.node}</td>
+												<td>$!{list.data1}</td>
+												<td>$!{list.check1}</td>
+												<td>$!{list.data2}</td>
+												<td>$!{list.check2}</td>
+												<td>$!{list.data3}</td>
+												<td>$!{list.check3}</td>
+												<td>$!{list.data4}</td>
+												<td>$!{list.check4}</td>
+												<td>$!{list.data5}</td>
+												<td>$!{list.check5}</td>
+											</tr>
+											#end
+										</tbody>
+									</table>
+									<div class="alldel">
+										<div class="userfenye">
+											<input name="currentPage" type="hidden" id="currentPage"
+												value="$!currentPage" /> $!gotoPageFormHTML
+										</div>
+									</div>
+								</div>
+							</div>
+						</form>
+						#if($show)
+						<div id="bottom">
+							<div style="text-align: center; margin-top: 50px">
+								<button id="button_import" style="width: 200px; height: 30px;">
+									<b>确认导入</b>
+								</button>
+								<button id="button_cancel" style="width: 200px; height: 30px;">
+									<b>放弃</b>
+								</button>
+							</div>
+						</div>
+						#else #end
+					</div>
+					</div> <!-- div-productmain END -->
+				</td>
+			</tr>
+		</table>
+		<div class="footer">$!httpInclude.include("/common/bottom.htm")
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		jQuery(".notice").slide({
+			titCell : ".tab-hd li",
+			mainCell : ".tab-bd",
+			delayTime : 0
+		});
+	</script>
+</body>
+</html>

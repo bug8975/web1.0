@@ -1,0 +1,473 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<!-- 
+需求改动：
+20161015：
+	（1）显示即时形变
+	（3）对于静力水准仪，不显示基准点的曲线
+	（2）显示除倾角和测斜仪之外其他曲线
+ -->
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>状态曲线-MonitorSys</title>
+<meta name="keywords" content="$!config.keywords" />
+<meta name="description" content="$!config.description" />
+<link rel="shortcut icon" type="image/x-icon" href="" />
+<link href="$!webPath/resources/style/common/css/public_hj.css"
+	rel="stylesheet" type="text/css" />
+<link href="$!webPath/resources/style/common/css/index_hj.css"
+	rel="stylesheet" type="text/css" />
+<link
+	href="$!webPath/resources/style/common/css/jquery-ui-1.8.22.custom.css"
+	type="text/css" rel="stylesheet" />
+<link href="$!webPath/resources/css/user.css" type="text/css"
+	rel="stylesheet" />
+
+<script type="text/javascript"
+	src="$!webPath/resources/js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="$!webPath/resources/js/public_hj.js"></script>
+<script src="$!webPath/resources/js/jquery-1.6.2.js"></script>
+<script src="$!webPath/resources/js/jquery-ui-1.8.21.js"></script>
+<script src="$!webPath/resources/js/jquery.shop.common.js"></script>
+<script src="$!webPath/resources/js/highstock.js"></script>
+<script src="$!webPath/resources/js/exporting.js"></script>
+<script>
+Highcharts.setOptions({ global: { useUTC: false } });
+jQuery(document).ready(function(){
+  jQuery("#sensorTypeName").change(function(){
+      //var level=jQuery(this).attr("level");
+      var sensorTypeName=jQuery(this).val();
+      // alert("sensorTypeName:" + sensorTypeName);
+      if(sensorTypeName !="" && sensorTypeName=="FixedInclinoMeter" || sensorTypeName=="InclinoMeter"){
+          $("#monitorlineid").attr("disabled","disabled");
+          $("#rangeability").removeAttr("disabled");
+          $("#orderbtn").empty();
+          $("#orderbtn").append("<input name='' type='button' value='生成曲线' style='cursor: pointer;' onclick='createDataLine()' />");
+          $("#range").empty();
+          $("#range").append("<input id='rangeability' maxlength='6' autocomplete='on'  placeholder='上下限' size='10' onblur='createDataLine()' onkeyup='this.value=this.value.replace(/[^\- \d.]/g,'')'"+"/>");
+          $("#rangeability").removeAttr("disabled");
+      }else{
+          $("#monitorlineid").removeAttr("disabled");
+          $("#orderbtn").empty();
+          $("#orderbtn").append("<input name='' type='button' value='生成曲线' style='cursor: pointer;' onclick='generateSinkingDataLine()' />");
+          $("#range").empty();
+          $("#range").append("<input id='rangeability' maxlength='6' autocomplete='on'  placeholder='上下限' size='10' onblur='generateSinkingDataLine()' onkeyup='this.value=this.value.replace(/[^\- \d.]/g,'')'"+"/>");
+          $("#rangeability").attr("disabled","disabled");
+      }
+      if(sensorTypeName!=""){
+          jQuery.post("$!webPath/load_monitorline.htm",{"sensorTypeName":sensorTypeName},function(data){
+              jQuery("#monitorlineid").empty();
+              jQuery("#monitorlineid").append("<option value=''>请选择</option>");
+              jQuery.each(data, function(index,item){
+                  jQuery("#monitorlineid").append("<option value='"+item.id+"'>"+item.monitorLineName+"</option>");
+                  //jQuery("#sensor").show();
+              });
+              jQuery("#sensorid").empty();
+              jQuery("#sensorid").append("<option value=''>请选择</option>");
+          },"json");
+      }else{
+          jQuery("#monitorlineid").empty();
+          jQuery("#monitorlineid").append("<option value=''>请选择</option>");
+      }
+  });
+  jQuery("#monitorlineid").change(function(){
+      //var level=jQuery(this).attr("level");
+      
+      var id=jQuery(this).val();
+      if(id!=""){
+          jQuery.post("$!webPath/load_sensor_without_basepoint.htm",{"pid":id},function(data){
+              jQuery("#sensorid").empty();
+              jQuery("#sensorid").append("<option value=''>请选择</option>");
+              jQuery.each(data, function(index,item){
+                  jQuery("#sensorid").append("<option value='"+item.id+"'>"+item.sensorName+"</option>");
+                  //jQuery("#sensor").show();
+              });
+          }, "json");
+      } else {
+          jQuery("#sensorid").empty();
+          jQuery("#sensorid").append("<option value=''>请选择</option>");
+      }
+  });
+  document.getElementById("rangeability").value = getCookie("rangeability"); 
+
+});
+
+function dateFormat(timeMs, format){
+    var t = new Date(timeMs);
+    var tf = function(i){return (i < 10 ? '0' : '') + i};
+    return format.replace(/yyyy|MM|dd|HH|mm|ss/g, function(a){
+        switch(a){
+            case 'yyyy':
+                return tf(t.getFullYear());
+                break;
+            case 'MM':
+                return tf(t.getMonth() + 1);
+                break;
+            case 'mm':
+                return tf(t.getMinutes());
+                break;
+            case 'dd':
+                return tf(t.getDate());
+                break;
+            case 'HH':
+                return tf(t.getHours());
+                break;
+            case 'ss':
+                return tf(t.getSeconds());
+                break;
+        }
+    })
+}
+
+#if($!sinkingData)
+	#if($!hasData == 'true')
+		$(function(){
+			var x_Axis = $!sinkingData;
+			if( x_Axis.length <= 20){
+				x_Axis = x_Axis.length-1;
+			}else{
+				x_Axis = 19;
+			}
+			
+			var rangeValue;
+            if(getCookie("rangeability") == ""|| getCookie("rangeability") == "0"){
+                maxValue = null;
+                minValue = null;
+            }else if(getCookie("rangeability") < 0){
+            	maxValue = -getCookie("rangeability") ;
+                minValue = getCookie("rangeability") ;
+            }else{
+            	maxValue = getCookie("rangeability") ;
+                minValue = -getCookie("rangeability") ;
+            }
+			
+			var cellTime = $!cellectTime;
+			var monitorname;
+			var obj = document.getElementById("monitorlineid");
+			monitorname = obj.options[obj.selectedIndex].text;
+			var chart = new Highcharts.Chart({
+	            chart: {
+	                renderTo: 'container',
+	                defaultSeriesType: 'line', //图表类别，可取值有：line、spline、area、areaspline、bar、column等
+	                marginRight: 20,
+	                marginBottom: 40
+	            },
+	            title: {
+	                text: monitorname + '沉降曲线图', //设置一级标题
+	                x: -40, //center
+	                y: 20
+	            },
+	            subtitle: {
+	                text:'时间：' + cellTime[0], //设置二级标题
+	                x: -40,
+	                y: 40
+	            },
+	            scrollbar: {
+	                enabled: true
+	            },
+	            credits: { 
+                    enabled: false
+                }, //是否显示版权信息
+	            xAxis: {
+	            	 categories: $!sensor_name,//设置x轴的标题
+                     minTickInterval: 100,
+                     minorTickInterval: 100,
+                     minorTickPosition: 2500,
+                     tickInterval: 1,
+                     max: x_Axis
+	            },
+	            yAxis: {
+	            	max: maxValue,
+	            	min: minValue,
+	                title: {
+	                    text: "形变值"//设置y轴的标题
+	                },
+	                plotLines: [{
+	                    value: 0,
+	                    width: 1,
+	                    color: '#808080'
+	                }]
+	            },
+	            lang:{
+		            months:['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+		            shortMonths:['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+		            weekdays:['星期天','星期一','星期二','星期三','星期四','星期五','星期六'],
+		            exportButtonTitle:'导出PDF',
+		            printButtonTitle:'打印图片'
+		        },
+	            legend: {
+	            	layout: 'vertical',
+                    align: 'top', //设置说明文字的文字 left/right/top/
+                    verticalAlign: 'top',
+                    x: 45,
+                    borderWidth: 0
+	            },
+	            plotOptions: {
+	                line: {
+	                    dataLabels: {
+	                        enabled: true //显示每条曲线每个节点的数据项的值
+	                    },
+	                    enableMouseTracking: false
+	                }
+	            },
+	            series: [{
+	                name: '本次沉降值', //每条线的名称
+	                data: $!sinkingData//每条线的数据
+	            },{
+	            	name: '累计沉降值', //每条线的名称
+               		data: $!sinkingAccumulation//每条线的数据
+         		},{
+	            	name: '初始值', //每条线的名称
+               		data: $!initData//每条线的数据
+         		}/* ,{
+                    name: 'Tokyo',
+                    data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 25.2]
+                }  */
+         		]
+	        });
+		});
+	#end
+#end
+
+function generateSinkingDataLine(){
+	var sensorTypeName = document.getElementById("sensorTypeName").value;
+	if(sensorTypeName == ""){
+		alert("请选择传感器类型和监测线!");
+		return;
+	}
+	var monitorlineid = document.getElementById("monitorlineid").value;
+	if(monitorlineid == ""){
+		alert("请选择监测线!");
+		return;
+	}
+	var rangeability = document.getElementById("rangeability").value;
+    setCookie('rangeability',rangeability);
+	
+	document.ListForm.submit();
+}
+
+function createDataLine(){
+    var sensorTypeName = document.getElementById("sensorTypeName").value;
+    if(sensorTypeName == ""){
+        alert("请选择传感器类型和监测线!");
+        return;
+    }
+    
+    var rangeability = document.getElementById("rangeability").value;
+    if(rangeability==""){
+        rangeability = 20;
+    }else{
+        rangeability = parseInt(rangeability);//通过document.getElementById.value拿到的是字符串，在这里转为数字类型
+    }
+
+    var i= 0;
+    jQuery.post("$!webPath/createLine.htm",{"sensorType":sensorTypeName},function(data){
+    	var length = data.length;
+    	jQuery("#container").empty();
+        jQuery.each(data, function(index,item){
+        	var size = parseInt(100/length);
+            jQuery("#container").append("<div style='width:18%;height:530px;float:left;border:1px solid #5599FF;margin:9px 0.3% 9px 1.2%;' id=offset"+ i +"><p>"+ i +"</p></div>");
+
+        	var x_Axis = item.sinkingData;
+            if( x_Axis.length <= 20){
+                x_Axis = x_Axis.length;
+            }else{
+                x_Axis = 20;
+            }
+            var cellTime = item.cellectTime;
+            var dataTmp = "";
+            dataTmp += "{name: '偏移值',color:'#FF7744 ',data:" + item.sinkingData + "}" + ","  ;
+            //alert(dataTmp);
+            var chart = new Highcharts.Chart({
+                chart: {
+                    inverted: true,        //x与Y轴反转
+                    renderTo: 'offset' + i,
+                    defaultSeriesType: 'line', //图表类别，可取值有：line、spline、area、areaspline、bar、column等
+                    marginRight: 20,
+                    marginBottom: 40
+                },
+                title: {
+                    text: item.monitorName + '偏移图', //设置一级标题
+                    x: 5, 
+                    y: 30
+                },
+                subtitle: {
+                    text:'时间：' + cellTime, //设置二级标题
+                    x: 10,
+                    y: 45
+                },
+                /* scrollbar: {
+                    enabled: true
+                }, */
+                credits: { 
+                    enabled: false
+                }, //是否显示版权信息
+                xAxis: {
+                	labels: {
+                        formatter: function() {
+                            return this.value + 1;
+                        }
+                    },
+                    lineColor:'#800080',//x轴颜色
+                	tickInterval: 1,
+                	reversed: false,
+                },
+                yAxis: {
+                	tickInterval:rangeability/2,
+                    max:rangeability,
+                    min:-rangeability,
+                	title: {
+                        text: '偏移量(mm)',
+                     },
+                     labels: {
+                        formatter: function () {
+                           return this.value;
+                        }
+                     },
+   //                  gridLineColor: '   #800080 '
+                },
+                lang:{
+                    months:['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+                    shortMonths:['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+                    weekdays:['星期天','星期一','星期二','星期三','星期四','星期五','星期六'],
+                    exportButtonTitle:'导出PDF',
+                    printButtonTitle:'打印图片'
+                },
+                legend: {
+                	layout: 'vertical',
+                    align: 'top', //设置说明文字的文字 left/right/top/
+                    verticalAlign: 'top',
+                    x: -10,
+                    y: -10,
+                    borderWidth: 0
+                },
+                plotOptions: {
+                    line: {
+                        dataLabels: {
+                            enabled: true //显示每条曲线每个节点的数据项的值
+                        },
+                        enableMouseTracking: false
+                    }
+                },
+                series: eval("[" + dataTmp + "]") 
+            });
+            i++;
+        });
+    }, "json");
+}
+	
+</script>
+
+<script>
+//写cookies
+function setCookie(c_name, value, expiredays){
+ 　　　　var exdate=new Date();
+　　　　exdate.setDate(exdate.getDate() + expiredays);
+　　　　document.cookie=c_name+ "=" + escape(value) + ((expiredays==null) ? "" : ";expires="+exdate.toGMTString());
+ 　　}
+ 
+//读取cookies
+function getCookie(name)
+{
+    var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+ 
+    if(arr=document.cookie.match(reg))
+ 
+        return (arr[2]);
+    else
+        return null;
+}
+ 
+//删除cookies
+function delCookie(name)
+{
+    var exp = new Date();
+    exp.setTime(exp.getTime() - 1);
+    var cval=getCookie(name);
+    if(cval!=null)
+        document.cookie= name + "="+cval+";expires="+exp.toGMTString();
+}
+</script>
+
+</head>
+<body class="info">
+	$!httpInclude.include("/common/top.htm")
+	<div class="main_bj"></div>
+	<div class="main">
+		$!httpInclude.include("/common/head.htm")
+		<table width="100%" border="0" cellspacing="0" cellpadding="0"
+			class="user_table">
+
+			<tr>
+				$!httpInclude.include("/common/menu_nav.htm?op=monitordataline")
+				<td id="centerbg" valign="top">
+					<div class="productmain">
+						<div class="ordercon">
+							<form method="post" name="ListForm" id="ListForm">
+								<div class="ordersear">
+									<span>传感器类型:</span> <span class="ordersel"> <select
+										name="sensorTypeName" id="sensorTypeName">
+											<option value="" selected="selected">请选择</option>
+											#foreach($sensorType in $sensorTypes)
+											<option value="$!sensorType.name"
+												#if($!sensorTypeName==$!sensorType.name) selected="selected"
+												#end>$!sensorType.displayName</option> #end
+									</select>
+									</span>
+									<span>&nbsp;&nbsp;&nbsp;监测线:</span>
+                                        <span class="ordersel">
+										<select name="monitorlineid" id="monitorlineid">
+											<option value="" selected="selected">请选择</option>
+											#foreach($monitorline in $monitorLines)
+											<option value="$!monitorline.id"
+												#if($!monitorlineid==$!monitorline.id) selected="selected"
+												#end>$!monitorline.name</option> #end
+									</select>
+									</span>
+									<span class="orderbtn" id="orderbtn"> <input name="" type="button"
+										value="生成曲线" style="cursor: pointer;"
+										onclick="generateSinkingDataLine()" />
+									</span>
+								</div>
+							</form>
+						</div>
+
+						<div class="operation">
+						
+						    <div style="margin-bottom:15px">
+							    <span class="px10">&nbsp;&nbsp;&nbsp;变&nbsp;化&nbsp;范&nbsp;围:&nbsp;</span>
+							    <span id="range">
+			                        <input id="rangeability" maxlength="6" autocomplete="on"  placeholder="上下限" 
+			                             style="" disabled="disabled" size="10" onblur="generateSinkingDataLine()" onkeyup="this.value=this.value.replace(/[^\- \d.]/g,'')" />
+		                        </span>
+	                        </div>
+							<table width="1039" border="0" cellspacing="0" cellpadding="0"
+								id="opertable">
+								<tr id="opertitle">
+									<td></td>
+								</tr>
+							</table>
+							<div id="container" style="height: 550px;overflow:auto;"></div>
+						</div>
+
+					</div> <!-- div-productmain END -->
+				</td>
+			</tr>
+		</table>
+
+		<div class="footer">$!httpInclude.include("/common/bottom.htm")
+		</div>
+	</div>
+	<!--返回最顶部-->
+	<!--
+<div class="back_box"  style=" display:none;width:50px; height:50px;position:fixed; bottom:180px; right:25px;">
+    <div class="back_index"><a href="./index.htm"  title="返回主页"></a></div>
+    <div class="back_top"><a id="toTop" href="#" bosszone="hometop" style="display: block;" onclick="window.scrollTo(0,0);return false" title="返回顶部" target="_self" ></a></div>
+</div>
+-->
+
+	<script type="text/javascript">
+    jQuery(".notice").slide({ titCell:".tab-hd li", mainCell:".tab-bd",delayTime:0 });
+</script>
+</body>
+</html>
