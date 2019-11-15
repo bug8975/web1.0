@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 	<head>
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 		<meta charset="utf-8">
 		<title>主页</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+		<meta name="referrer" content="never">
 		<meta name="description" content="">
 		<meta name="author" content="">
 		<link rel="stylesheet" type="text/css" href="$!webPath/resources/bootstrap/css/cloud-admin.css">
@@ -12,7 +13,6 @@
 		<link rel="stylesheet" type="text/css" href="$!webPath/resources/bootstrap/css/responsive.css">
 
 		<!-- STYLESHEETS -->
-		<!--[if lt IE 9]><script src="js/flot/excanvas.min.js"></script><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script><![endif]-->
 		<link href="$!webPath/resources/bootstrap/font-awesome/css/font-awesome.min.css" rel="stylesheet">
 		<!-- ANIMATE -->
 		<link rel="stylesheet" type="text/css" href="$!webPath/resources/bootstrap/css/animatecss/animate.min.css" />
@@ -26,6 +26,21 @@
 		<link rel="stylesheet" type="text/css" href="$!webPath/resources/bootstrap/js/gritter/css/jquery.gritter.css" />
 		<!-- 自定义CSS样式 -->
 		<link rel="stylesheet" type="text/css" href="$!webPath/resources/bootstrap/css/custom/default.css">
+		
+				<!--基础样式-->
+				<link href="https://cdn.bootcss.com/twitter-bootstrap/3.4.1/css/bootstrap.css" rel="stylesheet">
+				<link href="https://cdn.bootcss.com/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+				
+				<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+				<script src="https://cdn.bootcss.com/twitter-bootstrap/3.4.1/js/bootstrap.min.js"></script>
+				<script src="https://cdn.bootcss.com/bootstrap-select/2.0.0-beta1/js/bootstrap-select.js">
+				<!--时间选择器-->
+				<script src="https://cdn.bootcss.com/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+				<script src="$!webPath/resources/bootstrap/js/moment-with-locales.js" type="text/javascript" charset="utf-8"></script>
+				<!--hchart-->
+				<script src="$!webPath/resources/bootstrap/js/highcharts.js" type="text/javascript" charset="utf-8"></script>
+		
+
 	</head>
 	<body>
 		<!-- 头部页眉 -->
@@ -51,8 +66,7 @@
 										<ul class="breadcrumb">
 											<li>
 												<i class="fa fa-home"></i>
-												<a href="home.html">主页</a>
-											</li>
+												<a href="$!webPath/home.htm">主页</a>
 											<li>数据看板</li>
 										</ul>
 									</div>
@@ -69,60 +83,69 @@
 										<div class="col-lg-6">
 											<div class="dashbox panel panel-default">
 												<div class="panel-body">
-													<div class="panel-left red">
-														<i class="fa fa-instagram fa-3x"></i>
-													</div>
-													<div class="panel-right">
-														<div class="number">6718</div>
-														<div class="title">Likes</div>
-														<span class="label label-success">
-															26% <i class="fa fa-arrow-up"></i>
-														</span>
-													</div>
+													<div id="card-tl" style="min-width:100%;height:350px"></div>
 												</div>
 											</div>
 										</div>
 										<div class="col-lg-6">
 											<div class="dashbox panel panel-default">
 												<div class="panel-body">
-													<div class="panel-left blue">
-														<i class="fa fa-twitter fa-3x"></i>
-													</div>
-													<div class="panel-right">
-														<div class="number">2724</div>
-														<div class="title">Followers</div>
-														<span class="label label-warning">
-															5% <i class="fa fa-arrow-down"></i>
-														</span>
+													<div id="card-tr" style="width:100%;height:350px">
+														<img src="$!webPath/resources/images/chuanganqi.png" width="100%" height="100%" />
+														<span style="position: absolute; top: 212px; left: 332px; font-size: 20px; font-weight: bold; color: #0044CC;">320</span>
+														<span style="position: absolute; top: 270px; left: 336px; font-size: 20px; font-weight: bold; color: red;">12</span>
 													</div>
 												</div>
 											</div>
 										</div>
 									</div>
 									<div class="row">
-										<div class="col-md-12">
-											<div class="quick-pie panel panel-default">
-												<div class="panel-body">
-													<div class="col-md-4 text-center">
-														<div id="dash_pie_1" class="piechart" data-percent="59">
-															<span class="percent"></span>
-														</div>
-														<a href="#" class="title">New Visitors <i class="fa fa-angle-right"></i></a>
-													</div>
-													<div class="col-md-4 text-center">
-														<div id="dash_pie_2" class="piechart" data-percent="73">
-															<span class="percent"></span>
-														</div>
-														<a href="#" class="title">Bounce Rate <i class="fa fa-angle-right"></i></a>
-													</div>
-													<div class="col-md-4 text-center">
-														<div id="dash_pie_3" class="piechart" data-percent="90">
-															<span class="percent"></span>
-														</div>
-														<a href="#" class="title">Brand Popularity <i class="fa fa-angle-right"></i></a>
-													</div>
-												</div>
-											</div>
+										<div class="col-md-6">
+											<table class="table table-bordered">
+												<tbody align="center" valign="center" bgcolor="#d9edf7">
+													<tr>
+														<td colspan="3" height="100px">
+															<h1 style="font-weight: bold;">巡检工作</h1>
+														</td>
+													</tr>
+													<tr  height="50px"  style="vertical-align: middle;display: table-clel;">
+														<td>
+															列表
+														</td>
+														<td>
+															统计
+														</td>
+														<td>
+															处置
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+										<div class="col-md-6">
+											<table class="table table-bordered">
+												<tbody align="center" valign="center" bgcolor="#d9edf7">
+													<tr>
+														<td colspan="4" height="100px">
+															<h1 style="font-weight: bold;">定检工作</h1>
+														</td>
+													</tr>
+													<tr  height="50px" style="vertical-align: middle;display: table-clel;">
+														<td>
+															列表
+														</td>
+														<td>
+															计划
+														</td>
+														<td>
+															统计
+														</td>
+														<td>
+															处置
+														</td>
+													</tr>
+												</tbody>
+											</table>
 										</div>
 									</div>
 								</div>
@@ -132,7 +155,7 @@
 								<div class="col-md-6">
 
 									<div class="row">
-										<div class="box solid grey">
+										<div class="box border two">
 											<div class="box-title">
 												<div class="form-inline">
 													<h4><i class="fa fa-dollar"></i>实时曲线</h4>
@@ -145,60 +168,38 @@
 													</div>	
 												</div>
 												<div class="form-inline">
-													<form method="post" name="ListForm" id="ListForm">
-														<div class="ordersear">
+													<form>
+														<div class="ordersear" style="color: black;">
 															<span>传感器类型:</span> 
 															<span class="ordersel"> 
-																<select name="sensorTypeName" id="sensorTypeName">
-																		<option value="" selected="selected">请选择</option>
-																		#foreach($sensorType in $sensorTypes)
-																		<option value="$!sensorType.name"
-																			#if($!sensorTypeName==$!sensorType.name)
-																			selected="selected" #end>$!sensorType.displayName</option>
-																		#end
+																<select name="sensorTypeName1" class='form-control' 
+																data-live-search="true" id="sensorTypeName1"  onchange="selectOnchang1(this)">
 																</select>
 															</span> 
+															
 															<span>&nbsp;&nbsp;&nbsp;监测线:</span> 
 															<span class="ordersel">
-																<select name="monitorlineid" id="monitorlineid">
-																	<option value="" selected="selected">请选择</option>
-																	#foreach($monitorline in $monitorLines)
-																	<option value="$!monitorline.id"
-																		#if($!monitorlineid==$!monitorline.id)
-																		selected="selected" #end>$!monitorline.name</option>
-																	#end
+																<select name="monitorlineid1" class='form-control'
+																data-live-search="true" id="monitorlineid1">
 																</select>
-																<span class="px10">&nbsp;&nbsp;&nbsp;变&nbsp;化&nbsp;范&nbsp;围:&nbsp;</span>
-																<span id="range"> 
-																	<input id="rangeability"
-																	maxlength="6" autocomplete="on" placeholder="上下限" style=""
-																	disabled="disabled" size="10"
-																	onblur="generateSinkingDataLine()"
-																	onkeyup="this.value=this.value.replace(/[^\- \d.]/g,'')" />
-																</span>
-															</span> 
-															<span class="orderbtn" id="orderbtn"> 
-																<input name="" type="button" value="生成曲线"
-																style="cursor: pointer;" href="/home.htm"
-																onclick="generateSinkingDataLine()" />
 															</span>
+															
+															<span class="px10">&nbsp;&nbsp;&nbsp;变&nbsp;化&nbsp;范&nbsp;围:&nbsp;</span>
+															<span id="range"> 
+																<input id="rangeability"
+																maxlength="6" autocomplete="on" placeholder="上下限" style=""
+																disabled="disabled" size="10"
+																onblur="generateSinkingDataLine()"
+																onkeyup="this.value=this.value.replace(/[^\- \d.]/g,'')" />
+															</span>	
+															
+															<input class="btn btn-default" onclick="generateSinkingDataLine()" type="button" value="生成曲线"/>
 														</div>
 													</form>
 												</div>																												
 											</div>
 											<div class="box-body">
-												<div class="operation">	
-													<div style="margin-bottom: 15px">
-														<table width="1039" border="0" cellspacing="0"
-															cellpadding="0" id="opertable">
-															<tr id="opertitle">
-																<td></td>
-															</tr>
-														</table>
-														<div id="container" style="height: 550px; overflow: auto;"></div>
-													</div>
-												</div>		
-												<!-- <canvas id="myChart" width="100%" height="100%"></canvas>										 -->
+												<div id="myChart" style="height: 430px; overflow: auto;"></div>
 											</div>
 										</div>
 									</div>
@@ -208,109 +209,103 @@
 							<!-- /DASHBOARD CONTENT -->
 							<!-- HERO GRAPH -->
 							<div class="row">
-								<div class="col-md-12">
-									<!-- BOX -->
-									<div class="box border green">
-										<div class="box-title">
-											<div class="form-inline">
-												<h4><i class="fa fa-bars"></i> <span class="hidden-inline-mobile">累计形变图</span></h4>
-											</div>
-											<div class="form-inline">
-												<form method="post" name="ListForm" id="ListForm">
-													<div class="ordersear">
-														<span>传感器类型:</span> 
-														<span class="ordersel"> 
-															<select name="sensorTypeName" id="sensorTypeName">
-																	<option value="" selected="selected">请选择</option>
-																	#foreach($sensorType in $sensorTypes)
-																	<option value="$!sensorType.name"
-																		#if($!sensorTypeName==$!sensorType.name)
-																		selected="selected" #end>$!sensorType.displayName</option>
-																	#end
-															</select>
-														</span> 
-														<span>&nbsp;&nbsp;&nbsp;监测线:</span> 
-														<span class="ordersel">
-															<select name="monitorlineid" id="monitorlineid">
-																<option value="" selected="selected">请选择</option>
-																#foreach($monitorline in $monitorLines)
-																<option value="$!monitorline.id"
-																	#if($!monitorlineid==$!monitorline.id)
-																	selected="selected" #end>$!monitorline.name</option> #end
-															</select>
-														</span> 
-														<span>&nbsp;&nbsp;&nbsp;传感器:</span> 
-														<span class="ordersel">
-															<select name="sensorid" id="sensorid">
-																<option value="" selected="selected">请选择</option>
-																#foreach($sensor in $sensors)
-																<option value="$!sensor.id" #if($!sensorid==$!sensor.id)
-																	selected="selected" #end>$!sensor.name</option> #end
-															</select>
-														</span> 
-														<span class="px10">&nbsp;&nbsp;&nbsp;时间段:</span> 
-														<span class="ordersel"> 
-															<input name="beginTime"
-															type="text" id="beginTime" value="$!beginTime"
-															readonly="readonly" style="width: 80px;" />
-														</span> 
-														<span>-</span> 
-														<span class="ordersel"> 
-															<input name="endTime" type="text" id="endTime" value="$!endTime"
-															readonly="readonly" style="width: 80px;" />
-														</span> 
-														<span class="orderbtn"> 
-															<input name="" type="button"
-															value="生成曲线" style="cursor: pointer;" href="/hemo.htm"
-															onclick="generateLine()" />
-														</span>
+								<!-- BOX -->
+								<div class="box border two">
+									<div class="box-title">
+										<div>
+											<h4><i class="fa fa-bars"></i> <span class="hidden-inline-mobile">累计形变图</span></h4>
+										</div>
+										<div class="row">
+											<div class="row" style="margin-left: 20px;margin-bottom: 5px;margin-top: 5px;">
+												<div class="form-inline">
+													<div class="form-inline" style="margin-left: 20px;	float: left">
+														<label>传感器类型:</label>
+														<select name="sensorTypeName2" class='form-control'
+														data-live-search="true" id="sensorTypeName2"  onchange="selectOnchang2(this)" style="max-width: 300px;">
+														</select>
 													</div>
-												</form>
+													
+													<div class="form-inline" style="margin-left: 20px;	float: left">
+														<label>&nbsp;&nbsp;&nbsp;监测线:</label>
+														<select name="monitorlineid2" class='form-control'
+														data-live-search="true" id="monitorlineid2"  onchange="selectOnchang3(this)" style="max-width: 300px;">
+														</select>
+													</div>
+													
+													<div class="form-inline" style="margin-left: 20px;	float: left">
+														<label>&nbsp;&nbsp;&nbsp;传感器:</label>
+														<select name="sensorid2" class='form-control'
+														data-live-search="true" id="sensorid2" style="max-width: 350px;">
+														</select>
+													</div>
+													
+													<div class="form-inline" style="margin-left: 20px;	float: left">
+														<label class="px10">&nbsp;&nbsp;&nbsp;形变范围(Y轴):</label>
+														<input
+															id="singleMaxValue" maxlength="6" autocomplete="on"
+															placeholder="形变上限" style="" size="10"
+															onblur="generateLine()"
+															onkeyup="this.value=this.value.replace(/[^\- \d.]/g,'')" />&nbsp;-
+														<input id="singleMinValue" maxlength="6" autocomplete="on"
+															placeholder="形变下限" style="" size="10"
+															onblur="generateLine()"
+															onkeyup="this.value=this.value.replace(/[^\- \d.]/g,'')" />
+													</div>
+												</div>
+												<div class='input-group date' id='datetimepicker1'  style="margin-left: 20px;	float: left; max-width: 220px;">
+												    <input type='text' class="form-control" />
+												    <span class="input-group-addon">
+												        <span class="glyphicon glyphicon-time"></span>
+												    </span>
+												</div>
+												<div class='input-group date' id='datetimepicker2'  style="margin-left: 20px;	float: left; max-width: 220px;">
+												    <input type='text' class="form-control" />
+												    <span class="input-group-addon">
+												        <span class="glyphicon glyphicon-time"></span>
+												    </span>    
+												</div>
+												<div style="margin-left: 20px;	float: left">
+													<input class="btn btn-default" onclick="generateLine()" type="button" value="生成曲线"/>
+												</div>
+											</div>
+											<div class="row" style="height: 40px;">
+												
 											</div>
 										</div>
-										<div class="box-body">
-											<div class="tabbable header-tabs">
-												<ul class="nav nav-tabs">
-													<li>
-														<a href="#box_tab2" data-toggle="tab">
-															<i class="fa fa-search-plus"></i> 
-															<span class="hidden-inline-mobile">累计形变单曲线</span>
-														</a>
-													</li>
-													<li class="active">
-														<a href="#box_tab1" data-toggle="tab">
-															<i class="fa fa-bar-chart-o"></i> 
-															<span class="hidden-inline-mobile">累计形变多曲线</span>
-														</a>
-													</li>
-												</ul>
-												<div class="tab-content">
-													<div class="operation">
-														<div style="margin-bottom: 15px">
-															<span class="px10">&nbsp;&nbsp;&nbsp;形变范围(Y轴):</span> <input
-																id="singleMaxValue" maxlength="6" autocomplete="on"
-																placeholder="形变上限" style="" size="10"
-																onblur="generateLine()"
-																onkeyup="this.value=this.value.replace(/[^\- \d.]/g,'')" />&nbsp;-
-															<input id="singleMinValue" maxlength="6" autocomplete="on"
-																placeholder="形变下限" style="" size="10"
-																onblur="generateLine()"
-																onkeyup="this.value=this.value.replace(/[^\- \d.]/g,'')" />
-														</div>
-														<table width="100%" border="0" cellspacing="0" cellpadding="0"
-															id="opertable">
-															<tr id="opertitle">
-																<td></td>
-															</tr>
-														</table>
-														<div id="container" style="height: 550px; min-width: 310px"></div>
-													</div>
+										
+									</div>
+									<div class="box-body">
+										<div class="tabbable header-tabs">
+											<ul class="nav nav-tabs">
+												<li>
+													<a href="#box_tab2" data-toggle="tab">
+														<i class="fa fa-search-plus"></i> 
+														<span class="hidden-inline-mobile">累计形变单曲线</span>
+													</a>
+												</li>
+												<li class="active">
+													<a href="#box_tab1" data-toggle="tab">
+														<i class="fa fa-bar-chart-o"></i> 
+														<span class="hidden-inline-mobile">累计形变多曲线</span>
+													</a>
+												</li>
+											</ul>
+											<div class="tab-content">
+												<div class="operation">
+													
+													<table width="100%" border="0" cellspacing="0" cellpadding="0"
+														id="opertable">
+														<tr id="opertitle">
+															<td></td>
+														</tr>
+													</table>
+													<div id="container" style="height: 550px; min-width: 310px"></div>
 												</div>
 											</div>
 										</div>
 									</div>
-									<!-- /BOX -->
 								</div>
+								<!-- /BOX -->
 							</div>
 							<!-- /HERO GRAPH -->
 							<!-- /DASHBOARD CONTENT -->
@@ -368,13 +363,115 @@
 		<script type="text/javascript" src="$!webPath/resources/bootstrap/js/gritter/js/jquery.gritter.min.js"></script>
 		<!-- CUSTOM SCRIPT -->
 		<script src="$!webPath/resources/bootstrap/js/script.js"></script>
-<script type="text/javascript" src="$!webPath/resources/js/public_hj.js"></script>
-<script src="$!webPath/resources/js/jquery.shop.common.js"></script>
-<script src="$!webPath/resources/js/highstock.js"></script>
-<script src="$!webPath/resources/js/exporting.js"></script>
+		<script src="$!webPath/resources/js/jquery.shop.common.js"></script>
+		<script src="$!webPath/resources/js/highstock.js"></script>
+		<script src="$!webPath/resources/js/exporting.js"></script>
+		<script src="$!webPath/resources/bootstrap/js/moment-with-locales.js" type="text/javascript" charset="utf-8"></script>
+		<!-- <script src="https://cdn.bootcss.com/bootstrap-select/2.0.0-beta1/js/bootstrap-select.js"></script> -->
+		<script src="https://cdn.bootcss.com/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
 		<script>
 Highcharts.setOptions({ global: { useUTC: false } });
 jQuery(document).ready(function(){
+	//获取下拉框数据源
+	getCountData();
+	// setInterval("getCountData()", 10000);  
+	
+	//卡片区--左上部分
+	var chart = new Highcharts.Chart({
+		chart: {
+			renderTo: 'card-tl',
+			type: 'column',
+			backgroundColor: 'white'
+		},
+		title: {
+			text: '预警类型分布',
+			style: {
+				color: 'black',
+				fontWeight: 'bold'
+			}
+		},
+		exporting: {
+			enabled: false
+		},
+		credits: { 
+			enabled: false
+		},
+		xAxis: {
+			categories: ['电容式静力水准仪', '压力式静力水准仪', '电感式静力水准仪', '轴力计', '位移传感器'],
+			labels: {
+				style: {
+					color: 'black',
+					fontWeight: 'bold',
+					fontSize: '9px'
+				}
+			},
+			tickColor: 'white',
+			lineColor: 'white',	//x坐标轴设置为黑色
+			visible: true
+		},
+		yAxis: {
+			min: 0,
+			gridLineColor: 'white',	//平行于X轴的网格线设置为黑色
+			labels:{
+				enabled: false
+			},
+			title: {
+				text: ''
+			},
+			stackLabels: {  // 堆叠数据标签
+				enabled: true,
+				style: {
+					fontWeight: 'bold',
+					color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+				}
+			}
+		},
+		legend: {
+			align: 'right',
+			x: -20,
+			verticalAlign: 'top',
+			y: 25,
+			floating: true,
+			backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
+			borderColor: '#CCC',
+			borderWidth: 1,
+			shadow: false
+		},
+		tooltip: {
+			formatter: function () {
+				return '<b>' + this.x + '</b><br/>' +
+					this.series.name + ': ' + this.y + '<br/>' +
+					'预警总数: ' + this.point.stackTotal;
+			}
+		},
+		plotOptions: {
+			column: {
+				stacking: 'normal',
+				dataLabels: {
+					enabled: true,
+					color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'black',
+					style: {
+						// 如果不需要数据标签阴影，可以将 textOutline 设置为 'none'
+						textOutline: 'none'
+					}
+				}
+			}
+		},
+		series: [{
+			color: '#d9edf7',
+			name: '一级预警',
+			data: [5, 3, 4, 7, 2]
+		}, {
+			color: '#31e5c7',
+			name: '二级预警',
+			data: [2, 2, 3, 2, 1]
+		}, {
+			color: '#1ea2eb',
+			name: '三级预警',
+			data: [3, 4, 4, 2, 5]
+		}]
+	});
+	
 	//chart-two部分
 	jQuery('#beginTime').datepicker({
 		  dateFormat:"yy-mm-dd",
@@ -391,65 +488,94 @@ jQuery(document).ready(function(){
 	    dayNamesMin: ['日','一','二','三','四','五','六']
 	});
 	//chart-one部分
-  jQuery("#sensorTypeName").change(function(){
-      //var level=jQuery(this).attr("level");
-      var sensorTypeName=jQuery(this).val();
-      // alert("sensorTypeName:" + sensorTypeName);
-      if(sensorTypeName !="" && sensorTypeName=="FixedInclinoMeter" || sensorTypeName=="InclinoMeter"){
-          $("#monitorlineid").attr("disabled","disabled");
-          $("#rangeability").removeAttr("disabled");
-          $("#orderbtn").empty();
-          $("#orderbtn").append("<input name='' type='button' value='生成曲线' style='cursor: pointer;' onclick='createDataLine()' />");
-          $("#range").empty();
-          $("#range").append("<input id='rangeability' maxlength='6' autocomplete='on'  placeholder='上下限' size='10' onblur='createDataLine()' onkeyup='this.value=this.value.replace(/[^\- \d.]/g,'')'"+"/>");
-          $("#rangeability").removeAttr("disabled");
-      }else{
-          $("#monitorlineid").removeAttr("disabled");
-          $("#orderbtn").empty();
-          $("#orderbtn").append("<input name='' type='button' value='生成曲线' style='cursor: pointer;' onclick='generateSinkingDataLine()' />");
-          $("#range").empty();
-          $("#range").append("<input id='rangeability' maxlength='6' autocomplete='on'  placeholder='上下限' size='10' onblur='generateSinkingDataLine()' onkeyup='this.value=this.value.replace(/[^\- \d.]/g,'')'"+"/>");
-          $("#rangeability").attr("disabled","disabled");
-      }
-      if(sensorTypeName!=""){
-          jQuery.post("$!webPath/load_monitorline.htm",{"sensorTypeName":sensorTypeName},function(data){
-              jQuery("#monitorlineid").empty();
-              jQuery("#monitorlineid").append("<option value=''>请选择</option>");
-              jQuery.each(data, function(index,item){
-                  jQuery("#monitorlineid").append("<option value='"+item.id+"'>"+item.monitorLineName+"</option>");
-                  //jQuery("#sensor").show();
-              });
-              jQuery("#sensorid").empty();
-              jQuery("#sensorid").append("<option value=''>请选择</option>");
-          },"json");
-      }else{
-          jQuery("#monitorlineid").empty();
-          jQuery("#monitorlineid").append("<option value=''>请选择</option>");
-      }
-  });
-  jQuery("#monitorlineid").change(function(){
-      //var level=jQuery(this).attr("level");
-      
-      var id=jQuery(this).val();
-      if(id!=""){
-          jQuery.post("$!webPath/load_sensor_without_basepoint.htm",{"pid":id},function(data){
-              jQuery("#sensorid").empty();
-              jQuery("#sensorid").append("<option value=''>请选择</option>");
-              jQuery.each(data, function(index,item){
-                  jQuery("#sensorid").append("<option value='"+item.id+"'>"+item.sensorName+"</option>");
-                  //jQuery("#sensor").show();
-              });
-          }, "json");
-      } else {
-          jQuery("#sensorid").empty();
-          jQuery("#sensorid").append("<option value=''>请选择</option>");
-      }
-  });
-  document.getElementById("rangeability").value = getCookie("rangeability"); 
-  //chart-two部分
-  document.getElementById("singleMaxValue").value = getCookie("singleMax"); 
-  document.getElementById("singleMinValue").value = getCookie("singMin");  
+	document.getElementById("rangeability").value = getCookie("rangeability"); 
+	//chart-two部分
+	document.getElementById("singleMaxValue").value = getCookie("singleMax"); 
+	document.getElementById("singleMinValue").value = getCookie("singMin");  
+	
+	App.init();
 });
+
+//TODO:获取下拉框数据源
+function getCountData() {
+	jQuery.post("$!webPath/getComboxValues.htm", function(data){
+
+		$("#sensorTypeName1").empty();
+		$("#sensorTypeName1").append("<option value='请选择'>请选择</option>");
+		
+		$("#sensorTypeName2").empty();
+		$("#sensorTypeName2").append("<option value='请选择'>请选择</option>");
+
+		for (var i = 0; i < data.SensorTypes.length; i++) {
+			var tempId = '<option  value="' + data.SensorTypes[i].name + '">' + data.SensorTypes[i].displayName + '</option>';
+			$("#sensorTypeName1").append(tempId);		
+			$("#sensorTypeName2").append(tempId);		
+		}
+		//设置默认选中
+		// $('#sensorTypeName1').selectpicker('val', data);
+			
+		//更新 
+		// $('#sensorTypeName1').selectpicker('refresh');
+		
+	}, "json");
+}	    
+
+//传感器类型值改变事件
+function selectOnchang1 (obj) {
+	var sensorTypeName = $('#sensorTypeName1').find("option:selected").attr('value');
+	if(sensorTypeName !=""){
+		jQuery.post("$!webPath/load_monitorline.htm",{"sensorTypeName":sensorTypeName},function(data){
+			$("#monitorlineid1").empty();
+			$("#monitorlineid1").append("<option value='请选择'>请选择</option>");
+
+			jQuery.each(data, function(index,item){
+			    jQuery("#monitorlineid1").append("<option value='"+item.id+"'>"+item.monitorLineName+"</option>");
+			});
+		},"json");
+	}
+}
+
+function selectOnchang2 (obj) {
+	var sensorTypeName = $('#sensorTypeName2').find("option:selected").attr('value');
+	if(sensorTypeName !=""){
+		jQuery.post("$!webPath/load_monitorline.htm",{"sensorTypeName":sensorTypeName},function(data){
+			$("#monitorlineid2").empty();
+			$("#monitorlineid2").append("<option value='请选择'>请选择</option>");
+
+			jQuery.each(data, function(index,item){
+			    jQuery("#monitorlineid2").append("<option value='"+item.id+"'>"+item.monitorLineName+"</option>");
+			});
+		},"json");
+	}
+}
+
+//监测线值改变事件
+function selectOnchang3 (obj) {
+	var id = $('#monitorlineid2').find("option:selected").attr('value');
+	if(id !=""){
+	    jQuery.post("$!webPath/load_sensor_without_basepoint.htm",{"pid":id},function(data){
+	        $("#sensorid2").empty();
+	        $("#sensorid2").append("<option value='请选择'>请选择</option>");
+			
+	        jQuery.each(data, function(index,item){
+	            jQuery("#sensorid2").append("<option value='"+item.id+"'>"+item.sensorName+"</option>");
+	        });
+	    }, "json");
+	} else {
+	    jQuery("#sensorid").empty();
+	    jQuery("#sensorid").append("");
+	}
+}
+
+$('#datetimepicker1').datetimepicker({
+            locale : moment().locale('zh-cn'),
+			format : 'YYYY-MM-DD HH:MM:ss'
+    });
+	
+	$('#datetimepicker2').datetimepicker({
+	        locale : moment().locale('zh-cn'),
+			format : 'YYYY-MM-DD HH:MM:ss'
+	});
 
 function dateFormat(timeMs, format){
     var t = new Date(timeMs);
@@ -478,60 +604,72 @@ function dateFormat(timeMs, format){
     })
 }
 
-#if($!sinkingData)
-	#if($!hasData == 'true')
-		$(function(){
-			var x_Axis = $!sinkingData;
+
+function generateSinkingDataLine(){
+	var sensorTypeName = document.getElementById("sensorTypeName1").value;
+	if(sensorTypeName == ""){
+		alert("请选择传感器类型和监测线!");
+		return;
+	}
+	var monitorlineid = document.getElementById("monitorlineid1").value;
+	if(monitorlineid == ""){
+		alert("请选择监测线!");
+		return;
+	}
+	
+	jQuery.ajax({
+	    type: "post",
+	    dataType: "json",
+	    url: "$!webPath/getChartValues.htm",
+		data: {"sensorTypeName":sensorTypeName, "monitorlineid":monitorlineid},
+	    success: function (result) {
+			var x_Axis = JSON.parse(result.sinkingData);
 			if( x_Axis.length <= 20){
 				x_Axis = x_Axis.length-1;
 			}else{
 				x_Axis = 19;
 			}
-			
 			var rangeValue;
-            if(getCookie("rangeability") == ""|| getCookie("rangeability") == "0"){
-                maxValue = null;
-                minValue = null;
-            }else if(getCookie("rangeability") < 0){
-            	maxValue = -getCookie("rangeability") ;
-                minValue = getCookie("rangeability") ;
-            }else{
-            	maxValue = getCookie("rangeability") ;
-                minValue = -getCookie("rangeability") ;
-            }
+			if(getCookie("rangeability") == ""|| getCookie("rangeability") == "0"){
+			    maxValue = null;
+			    minValue = null;
+			}else if(getCookie("rangeability") < 0){
+				maxValue = -getCookie("rangeability") ;
+			    minValue = getCookie("rangeability") ;
+			}else{
+				maxValue = getCookie("rangeability") ;
+			    minValue = -getCookie("rangeability") ;
+			}
 			
-			var cellTime = $!cellectTime;
 			var monitorname;
-			var obj = document.getElementById("monitorlineid");
+			var obj = document.getElementById("monitorlineid1");
 			monitorname = obj.options[obj.selectedIndex].text;
 			var chart = new Highcharts.Chart({
-	            chart: {
-					backgroundColor: '#ffffff',
-					borderColor: '#ffffff',
-	                renderTo: 'container',
-					plotBackgroundColor: '#ffffff',
-	                defaultSeriesType: 'line', //图表类别，可取值有：line、spline、area、areaspline、bar、column等
-	                marginRight: 20,
-	                marginBottom: 40
-	            },
-	            title: {
-	                text: monitorname + '沉降曲线图', //设置一级标题
-	                x: -40, //center
-	                y: 20
-	            },
-	            subtitle: {
-	                text:'时间：' + cellTime[0], //设置二级标题
-	                x: -40,
-	                y: 40
-	            },
-	            scrollbar: {
-	                enabled: false
-	            },
-	            credits: { 
-                    enabled: false
-                }, //是否显示版权信息
-	            xAxis: {
-	            	 categories: $!sensor_name,//设置x轴的标题
+			    chart: {
+			        renderTo: 'myChart',
+			        defaultSeriesType: 'line', //图表类别，可取值有：line、spline、area、areaspline、bar、column等
+			        marginRight: 20,
+			        marginBottom: 40,
+					// backgroundColor: 'grey'
+			    },
+			    title: {
+			        text: monitorname + '沉降曲线图', //设置一级标题
+			        x: -40, //center
+			        y: 20
+			    },
+			    subtitle: {
+			        text:'时间：' + result.collectTime, //设置二级标题
+			        x: -40,
+			        y: 40
+			    },
+			    scrollbar: {
+			        enabled: false
+			    },
+			    credits: { 
+			        enabled: false
+			    }, //是否显示版权信息
+			    xAxis: {
+			    	 categories: JSON.parse(result.sensor_name),//设置x轴的标题
                      minTickInterval: 100,
                      minorTickInterval: 100,
                      minorTickPosition: 2500,
@@ -550,213 +688,262 @@ function dateFormat(timeMs, format){
 	                    color: '#808080'
 	                }]
 	            },
-	            lang:{
-		            months:['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
-		            shortMonths:['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
-		            weekdays:['星期天','星期一','星期二','星期三','星期四','星期五','星期六'],
-		            exportButtonTitle:'导出PDF',
-		            printButtonTitle:'打印图片'
-		        },
-	            legend: {
-	            	layout: 'vertical',
-                    align: 'top', //设置说明文字的文字 left/right/top/
-                    verticalAlign: 'top',
-                    x: 45,
-                    borderWidth: 0
-	            },
-	            plotOptions: {
-	                line: {
-	                    dataLabels: {
-	                        enabled: true //显示每条曲线每个节点的数据项的值
-	                    },
-	                    enableMouseTracking: false
-	                }
-	            },
-	            series: [{
-	                name: '本次沉降值', //每条线的名称
-	                data: $!sinkingData//每条线的数据
-	            },{
+			    lang:{
+			        months:['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+			        shortMonths:['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+			        weekdays:['星期天','星期一','星期二','星期三','星期四','星期五','星期六'],
+			        exportButtonTitle:'导出PDF',
+			        printButtonTitle:'打印图片'
+			    },
+			    legend: {
+			    	layout: 'vertical',
+			        align: 'top', //设置说明文字的文字 left/right/top/
+			        verticalAlign: 'top',
+			        x: 45,
+			        borderWidth: 0
+			    },
+			    plotOptions: {
+			        line: {
+			            dataLabels: {
+			                enabled: true //显示每条曲线每个节点的数据项的值
+			            },
+			            enableMouseTracking: false
+			        }
+			    },
+			    series: [{
+			    	name: '本次沉降值', //每条线的名称
+			   		data: JSON.parse(result.sinkingData)//每条线的数据
+				},{
 	            	name: '累计沉降值', //每条线的名称
-               		data: $!sinkingAccumulation//每条线的数据
+               		data: JSON.parse(result.sinkingAccumulation)//每条线的数据
          		},{
 	            	name: '初始值', //每条线的名称
-               		data: $!initData//每条线的数据
-         		}/* ,{
-                    name: 'Tokyo',
-                    data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 25.2]
-                }  */
-         		]
-	        });
-		});
-	#end
-#end
+               		data: JSON.parse(result.initData)//每条线的数据
+         		}]
+			});
+	    },
+	    error : function() {
+	        alert("异常！");
+	    }
+	});
+};
 
-function generateSinkingDataLine(){
-	var sensorTypeName = document.getElementById("sensorTypeName").value;
+function generateLine(){
+	var sensorTypeName = document.getElementById("sensorTypeName2").value;
 	if(sensorTypeName == ""){
-		alert("请选择传感器类型和监测线!");
+		alert("请选择传感器类型，监测线和传感器!");
 		return;
 	}
-	var monitorlineid = document.getElementById("monitorlineid").value;
+	var monitorlineid = document.getElementById("monitorlineid2").value;
 	if(monitorlineid == ""){
-		alert("请选择监测线!");
+		alert("请选择监测线和传感器!");
 		return;
 	}
-	var rangeability = document.getElementById("rangeability").value;
-    setCookie('rangeability',rangeability);
-	
-	document.ListForm.submit();
-}
+	var sensorid = document.getElementById("sensorid2").value;
+	if(sensorid == ""){
+		alert("请选择传感器!");
+		return;
+	}
+	var beginTime = $("#datetimepicker1").find("input").val();
+	var endTime = $("#datetimepicker2").find("input").val();
+	if(beginTime == "" || endTime == ""){
+		alert("请选择时间!");
+		return;
+	}
 
-function createDataLine(){
-    var sensorTypeName = document.getElementById("sensorTypeName").value;
-    if(sensorTypeName == ""){
-        alert("请选择传感器类型和监测线!");
-        return;
-    }
+	//var beginTimeArray = /^(\d{4})-(\d{1,2})-(\d{1,2}) (\d{1,2}):(\d{1,2}):(\d{1,2})$/.exec(s);
+	var beginTimeArray = /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(beginTime);
+	var endTimeArray = /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(endTime);
+	var beginTimeDate = new Date(parseInt(beginTimeArray[1], 10),
+		parseInt(beginTimeArray[2], 10)-1,
+	    parseInt(beginTimeArray[3], 10));
+	var endTimeDate = new Date(parseInt(endTimeArray[1], 10),
+			parseInt(endTimeArray[2], 10)-1,
+		    parseInt(endTimeArray[3], 10));
+	//alert(beginTimeDate + "=="+ endTimeDate);
+	if(beginTimeDate > endTimeDate){
+		alert("结束时间必须大于开始时间!");
+		return;
+	}
+	var dtNew=new Date(beginTimeDate.getTime()+31*24*60*60*1000);
+	if(endTimeDate > dtNew){
+		alert("时间段必须在一个月内!");
+		return;
+	}
+	
+	var maxchange = document.getElementById("singleMaxValue").value;
+    setCookie('singleMax',maxchange);
+    var minchange = document.getElementById("singleMinValue").value;
+    setCookie('singMin',minchange)
     
-    var rangeability = document.getElementById("rangeability").value;
-    if(rangeability==""){
-        rangeability = 20;
-    }else{
-        rangeability = parseInt(rangeability);//通过document.getElementById.value拿到的是字符串，在这里转为数字类型
-    }
-
-    var i= 0;
-    jQuery.post("$!webPath/createLine.htm",{"sensorType":sensorTypeName},function(data){
-    	var length = data.length;
-    	jQuery("#container").empty();
-        jQuery.each(data, function(index,item){
-        	var size = parseInt(100/length);
-            jQuery("#container").append("<div style='width:18%;height:530px;float:left;border:1px solid #5599FF;margin:9px 0.3% 9px 1.2%;' id=offset"+ i +"><p>"+ i +"</p></div>");
-
-        	var x_Axis = item.sinkingData;
-            if( x_Axis.length <= 20){
-                x_Axis = x_Axis.length;
-            }else{
-                x_Axis = 20;
-            }
-            var cellTime = item.cellectTime;
-            var dataTmp = "";
-            dataTmp += "{name: '偏移值',color:'#FF7744 ',data:" + item.sinkingData + "}" + ","  ;
-            //alert(dataTmp);
-            var chart = new Highcharts.Chart({
-                chart: {
-                    inverted: true,        //x与Y轴反转
-                    renderTo: 'offset' + i,
-                    defaultSeriesType: 'line', //图表类别，可取值有：line、spline、area、areaspline、bar、column等
-                    marginRight: 20,
-                    marginBottom: 40
-                },
-                title: {
-                    text: item.monitorName + '偏移图', //设置一级标题
-                    x: 5, 
-                    y: 30
-                },
-                subtitle: {
-                    text:'时间：' + cellTime, //设置二级标题
-                    x: 10,
-                    y: 45
-                },
-                /* scrollbar: {
-                    enabled: true
-                }, */
-                credits: { 
-                    enabled: false
-                }, //是否显示版权信息
-                xAxis: {
-                	labels: {
-                        formatter: function() {
-                            return this.value + 1;
-                        }
-                    },
-                    lineColor:'#800080',//x轴颜色
-                	tickInterval: 1,
-                	reversed: false,
-                },
-                yAxis: {
-                	tickInterval:rangeability/2,
-                    max:rangeability,
-                    min:-rangeability,
-                	title: {
-                        text: '偏移量(mm)',
-                     },
-                     labels: {
-                        formatter: function () {
-                           return this.value;
-                        }
-                     },
-   //                  gridLineColor: '   #800080 '
-                },
-                lang:{
-                    months:['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
-                    shortMonths:['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
-                    weekdays:['星期天','星期一','星期二','星期三','星期四','星期五','星期六'],
-                    exportButtonTitle:'导出PDF',
-                    printButtonTitle:'打印图片'
-                },
-                legend: {
-                	layout: 'vertical',
-                    align: 'top', //设置说明文字的文字 left/right/top/
-                    verticalAlign: 'top',
-                    x: -10,
-                    y: -10,
-                    borderWidth: 0
-                },
-                plotOptions: {
-                    line: {
-                        dataLabels: {
-                            enabled: true //显示每条曲线每个节点的数据项的值
-                        },
-                        enableMouseTracking: false
-                    }
-                },
-                series: eval("[" + dataTmp + "]") 
-            });
-            i++;
-        });
-    }, "json");
-}
 	
+	jQuery.ajax({
+	    type: "post",
+	    dataType: "json",
+	    url: "$!webPath/getsingledataline.htm",
+		data: {
+			"sensorTypeName":sensorTypeName, "monitorlineid":monitorlineid, 
+			"sensorid":sensorid, "beginTime":beginTime, "endTime":endTime,
+			},
+	    success: function (result) {
+			var x_Axis = JSON.parse(result.sinkingData);
+			if( x_Axis.length <= 20){
+				x_Axis = x_Axis.length-1;
+			}else{
+				x_Axis = 19;
+			}
+			var rangeValue;
+			if(getCookie("rangeability") == ""|| getCookie("rangeability") == "0"){
+			    maxValue = null;
+			    minValue = null;
+			}else if(getCookie("rangeability") < 0){
+				maxValue = -getCookie("rangeability") ;
+			    minValue = getCookie("rangeability") ;
+			}else{
+				maxValue = getCookie("rangeability") ;
+			    minValue = -getCookie("rangeability") ;
+			}
+			
+			var chart1=new Highcharts.StockChart({
+			    chart:{
+			        renderTo:'container',
+			        reflow:true,
+			        hight:550
+			    },
+			    credits:{
+			        enabled:false,
+			        href:"http://www.mymonitorsys.com",
+			        test:''
+			    },
+			    lang:{
+			        months:['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+			        shortMonths:['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+			        weekdays:['星期天','星期一','星期二','星期三','星期四','星期五','星期六'],
+			        exportButtonTitle:'导出PDF',
+			        printButtonTitle:'打印报表'
+			    },
+			    title:{
+			        text: JSON.parse(result.sensorType)
+			        //text:'静力水准仪:'+title
+			    },
+			    subtitle: {
+			        // text: "#if($!isInclinometer == 'true') #else 累积形变 #end ($!unit)",
+			        x: 5,
+			        y: 35
+			    },
+			    rangeSelector:{
+			        buttons:[{
+			            type:'minute',
+			            count:60,
+			            text:'时'
+			        },{
+			            type:'day',
+			            count:1,
+			            text:'天'
+			        },{
+			            type:'all',
+			            text:'所有'
+			        }],
+			        selected:2,
+			        inputEnabled:true
+			    },
+			    tooltip:{
+			        xDateFormat:'%Y-%m-%d %H:%M:%S'
+			    },
+			    xAxis:{
+			        dateTimeLabelFormats:{
+			            second:'%Y-%m-%d<br/>%H:%M:%S',
+			            minute:'%Y-%m-%d<br/>%H:%M',
+			            hour:'%Y-%m-%d<br/>%H',
+			            day:'%Y<br/>%m-%d',
+			            week:'%Y<br/>%m-%d',
+			            month:'%Y-%m',
+			            year:'%Y'
+			        }
+			    },
+			    yAxis: {
+			        title: {
+			            // text: '#if($!isInclinometer == true) Y #else 沉降量 #end ($!unit)'
+			        },
+			        max: maxValue,
+			        min: minValue,
+			    },
+			    series:[
+						#if($!isInclinometer)
+			            {
+				            name:'X ('+result.unit+')',
+				            data:result.xdata,
+				            tooltip:
+			                {
+			                    valueDecimals:3
+			                }
+				        },
+			            {
+			            	name:'Y ('+result.unit+')',
+			            	data:result.sinkingData,
+				            tooltip:
+			                {
+			                    valueDecimals:3
+			                }
+			            },
+			            {
+				            name:'Z ('+result.unit+')',
+				            data:result.zdata,
+				            tooltip:
+			                {
+			                    valueDecimals:3
+			                }
+				        }
+			            #else 
+			            {
+			            	name:'累积形变 ('+result.unit+')',
+			            	data:result.zdata,
+				            tooltip:
+			                {
+			                    valueDecimals:3
+			                }
+			            }
+			            #end 
+			    ]
+			});
+		},
+		error : function() {
+		        alert("异常！");
+		    }
+		});    	
+	
+}
+
+
+	function setCookie(c_name, value, expiredays){
+	 　　　　var exdate=new Date();
+	　　　　exdate.setDate(exdate.getDate() + expiredays);
+	　　　　document.cookie=c_name+ "=" + escape(value) + ((expiredays==null) ? "" : ";expires="+exdate.toGMTString());
+	 　　}
+	 
+	//读取cookies
+	function getCookie(name)
+	{
+	    var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+	 
+	    if(arr=document.cookie.match(reg))
+	 
+	        return (arr[2]);
+	    else
+	        return null;
+	}
+	 
+	//删除cookies
+	function delCookie(name)
+	{
+	    var exp = new Date();
+	    exp.setTime(exp.getTime() - 1);
+	    var cval=getCookie(name);
+	    if(cval!=null)
+	        document.cookie= name + "="+cval+";expires="+exp.toGMTString();
+	}
 </script>
 
-<script>
-//写cookies
-function setCookie(c_name, value, expiredays){
- 　　　　var exdate=new Date();
-　　　　exdate.setDate(exdate.getDate() + expiredays);
-　　　　document.cookie=c_name+ "=" + escape(value) + ((expiredays==null) ? "" : ";expires="+exdate.toGMTString());
- 　　}
- 
-//读取cookies
-function getCookie(name)
-{
-    var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
- 
-    if(arr=document.cookie.match(reg))
- 
-        return (arr[2]);
-    else
-        return null;
-}
- 
-//删除cookies
-function delCookie(name)
-{
-    var exp = new Date();
-    exp.setTime(exp.getTime() - 1);
-    var cval=getCookie(name);
-    if(cval!=null)
-        document.cookie= name + "="+cval+";expires="+exp.toGMTString();
-}
-
-
-		
-			jQuery(document).ready(function() {
-				App.setPage("Home"); //Set current page
-				App.init(); //Initialise plugins and elements
-			});
-		</script>
 		<!-- /JAVASCRIPTS -->
 	</body>
 </html>
