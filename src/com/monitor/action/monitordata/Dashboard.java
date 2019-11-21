@@ -1,4 +1,4 @@
-package com.monitor.action;
+package com.monitor.action.monitordata;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -58,15 +58,22 @@ public class Dashboard {
     @Autowired
     private IMonitorDataViewService dataViewService;
 
-    //TODO:新增主页实时曲线图
   	@RequestMapping({ "/home.htm" })
+  	public ModelAndView gotohome(HttpServletRequest request, HttpServletResponse response) {
+  		ModelAndView mv = new JModelAndView("home.html",
+  				0, request, response);
+  		return mv;
+  	}
+    
+    //TODO:新增主页实时曲线图
+  	@RequestMapping({ "/monitordata/dashboard.htm" })
   	public ModelAndView insertMonitorDataLine(HttpServletRequest request, HttpServletResponse response, String currentPage,
   			String sensorTypeName, String monitorlineid, String sensorid) {
   		User user = Utils.checkLoginedUser(request);
   		if(user == null){
   			return Utils.redirectToLoginForNonLogined(request, response);
   		}
-  		ModelAndView mv = new JModelAndView("home.html",
+  		ModelAndView mv = new JModelAndView("monitordata/dashboard.html",
   				0, request, response);
 
   		// return query condition
@@ -154,6 +161,7 @@ public class Dashboard {
         }
     }
 	
+	//实时曲线
 	@RequestMapping({"/getChartValues.htm"})
     public void getChartValues(HttpServletRequest request,
                             HttpServletResponse response,String sensorTypeName, String monitorlineid) {
@@ -247,7 +255,7 @@ public class Dashboard {
 					String cTime = sdf.format( collectingTime );
 					appendData(cellectTime, cTime);
 					if(i < results.size()){ // has next
-						cellectTime.append(",");
+//						cellectTime.append(",");
 					}
 				}
 				
@@ -282,6 +290,7 @@ public class Dashboard {
 //		strBuffer.append("]");
 	}
 	
+	//累计形变单曲线
     @RequestMapping({ "/getsingledataline.htm" })
     public void getSingleDataLine(HttpServletRequest request, HttpServletResponse response, 
     		String sensorTypeName, String monitorlineid, String sensorid, String beginTime, String endTime) {

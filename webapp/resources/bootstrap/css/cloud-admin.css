@@ -9915,20 +9915,21 @@ ul.stats li small {
 
 /* 新增 样式 */
 .box.border.one {
-	border: 1px solid #c3d6e0;
+	border: 1px solid #6f6f6f;
 }
 
 .box.border.one>.box-title {
 	color: #FFFFFF !important;
-	background-color: #c3d6e0;
-	border-bottom: 1px solid #c3d6e0;
+	background-color: #6f6f6f;
+	border-bottom: 1px solid #6f6f6f;
 }
 
 .box.border.two {
-	border: 1px solid #5e87b0a6;
+	border: 1px solid #5e87b0;
 }
 
 .box.border.two>.box-title {
-	background-color: #5e87b0a6;
-	border-bottom: 1px solid #5e87b0a6;
+	color: #FFFFFF !important;
+	background-color: #5e87b0;
+	border-bottom: 1px solid #5e87b0;
 }

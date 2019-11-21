@@ -113,7 +113,7 @@ public class AppTransportAction {
 			//	    	} else {
 			String jsonString = getJsonString(request);	// get received JSON data from request
 			Logger.printlnWithTime("Receive monitorData String=" + jsonString);
-			/*String result = sendPost("http://114.55.59.23:8888/ucdy/app/monitorData.htm", jsonString);
+			/*String result = sendPost("http://http://114.55.0.46:9080/szjkjta/app/monitorData.htm", jsonString);
 		    Logger.printlnWithTime("reggs return information:" + result);*/
 			Gson gs = new Gson();
 			MonitorDataItem[] monitorDataItems = gs.fromJson(jsonString, MonitorDataItem[].class); // format data

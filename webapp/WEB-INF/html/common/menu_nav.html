@@ -22,12 +22,13 @@
           <span class="arrow"></span>
         </a>
         <ul class="sub">
-          <li><a class="" href="$!webPath/monitordata/monitordatalist.htm"><span class="sub-menu-text">实时数据查看</span></a></li>
+          <li><a class="" href="$!webPath/monitordata/dashboard.htm"><span class="sub-menu-text">数据看板</span></a></li>
+		  <li><a class="" href="$!webPath/monitordata/monitordatalist.htm"><span class="sub-menu-text">实时数据查看</span></a></li>
           <li><a class="" href="$!webPath/monitordata/monitordataline.htm"><span class="sub-menu-text">实时曲线查看</span></a></li>
           <li><a class="" href="$!webPath/monitordata/monitordataupdatelist.htm"><span class="sub-menu-text">历史数据查看</span></a></li>
           <li><a class="" href="$!webPath/monitordata/sensortrendanalysislist.htm"><span class="sub-menu-text">趋势分析</span></a></li>
           <li><a class="" href=""><span class="sub-menu-text">监测项初值信息</span></a></li>
-          <li><a class="" href=""><span class="sub-menu-text">BIM三维模型</span></a></li>
+          <li><a class="" href="$!webPath/monitordata/bimViz.htm"><span class="sub-menu-text">BIM三维模型</span></a></li>
         </ul>
       </li>
       <li class="has-sub">
@@ -60,7 +61,7 @@
         <ul class="sub">
           <li><a class="" href="$!webPath/deviceapp/thresholdsetlist.htm"><span class="sub-menu-text">预警阀值设置</span></a></li>
           <li><a class="" href="$!webPath/deviceapp/initialValueModify.htm"><span class="sub-menu-text">初值设置</span></a></li>
-          <li><a class="" href="$!webPath/deviceapp/axialForceCoefficient.htm"><span class="sub-menu-text">弦类系数设置</span></a></li>
+            #if($!logined_userrole=="SUPER")<li op="axialForceCoefficient"><a href="$!webPath/deviceapp/axialForceCoefficient.htm">弦类系数设定</a></li>#else #end
           <li><a class="" href=""><span class="sub-menu-text">监测点数据恢复</span></a></li>
           <li><a class="" href=""><span class="sub-menu-text">传感器类型管理</span></a></li>
           <li><a class="" href=""><span class="sub-menu-text">监测项管理</span></a></li>
