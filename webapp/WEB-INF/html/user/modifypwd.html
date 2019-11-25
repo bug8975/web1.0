@@ -129,11 +129,11 @@ function getSensorExcelReport(){
 		return;
 	}
 	if(monitorlineidString == ""){
-		alert("请选择监测线和传感器!");
+		alert("请选择监测线和监测点!");
 		return;
 	}
 	if(sensoridString == ""){
-		alert("请选择传感器!");
+		alert("请选择监测点!");
 		return;
 	}
 
@@ -258,7 +258,7 @@ function getSinkingOffsetStatExcelReport(){
 											</span> <br />&nbsp;<br />
 
 												<fieldset style="width: 65%; text-align: center;">
-													<legend>单个传感器报表</legend>
+													<legend>单个监测点报表</legend>
 													<br /> <label>监测线: <select
 														name="sensormonitorlineid" id="sensormonitorlineid">
 															<option value="" selected="selected">请选择</option>
@@ -268,7 +268,7 @@ function getSinkingOffsetStatExcelReport(){
 																selected="selected" #end>$!monitorline.name</option>
 															#end
 													</select>
-													</label>&nbsp;&nbsp; <label>传感器: <select name="sensorid"
+													</label>&nbsp;&nbsp; <label>监测点: <select name="sensorid"
 														id="sensorid">
 															<option value="" selected="selected">请选择</option>
 															#foreach($sensor in $sensors)

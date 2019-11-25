@@ -102,7 +102,7 @@ jQuery(document).ready(function(){
                 	}else{
                 		if(time == 0){
                             jQuery("#setcode").append("<span style='both:clean;line-height:30px;margin-top:10px'>初值模式：&nbsp;&nbsp;<b>"+ item.setModes+"</b>&nbsp;</span>");
-                            jQuery("#opertable").append("<tr id='opertitle'><td><b>传感器名称</b></td><td><b>初值一</b></td><td><b>修改</b></td><td><b>初值二</b></td><td><b>修改</b></td><td><b>初值三</b></td><td><b>修改</b></td><td><b>最后修改时间</b></td><td><b>初值类型编号</b></td><td><b>状态</b></td></tr>");
+                            jQuery("#opertable").append("<tr id='opertitle'><td><b>监测点名称</b></td><td><b>初值一</b></td><td><b>修改</b></td><td><b>初值二</b></td><td><b>修改</b></td><td><b>初值三</b></td><td><b>修改</b></td><td><b>最后修改时间</b></td><td><b>初值类型编号</b></td><td><b>状态</b></td></tr>");
                         }
                         time = item.time;
                         jQuery("#opertable").append("<tr><td><a id='"+item.id+"'>"+item.sensor+"</a></td><td>"+item.deviceData0+"</td><td><input size='5' value='"+item.deviceData0+"' class='onlyNum0' onkeyup='this.value=this.value.replace(/[^\\- \\d.]/g,\"\")'  onblur='checkNum(this.value)'/></td><td>"+item.deviceData1+"</td><td><input size='5' value='"+item.deviceData1+"' class='onlyNum1' onkeyup='this.value=this.value.replace(/[^\\- \\d.]/g,\"\")'  onblur='checkNum(this.value)'/></td><td>"+item.deviceData2+"</td><td><input size='5' value='"+item.deviceData2+"' class='onlyNum2' onkeyup='this.value=this.value.replace(/[^\\- \\d.]/g,\"\")'  onblur='checkNum(this.value)'/></td><td><span>"+item.collectingTime+"</span></td><td><span>"+item.getType+"</span></td><td><span>"+item.initSetStatus+"</span></td></tr>");
@@ -136,7 +136,7 @@ jQuery(document).ready(function(){
                         
                     }else{
                         jQuery("#setcode").append("<span style='both:clean;line-height:30px;margin-top:10px'>初值模式：&nbsp;&nbsp;<b>"+ item.setModes+"</b>&nbsp;</span>");
-                    	jQuery("#opertable").append("<tr id='opertitle'><td><b>传感器名称</b></td><td><b>初值一</b></td><td><b>修改</b></td><td><b>初值二</b></td><td><b>修改</b></td><td><b>初值三</b></td><td><b>修改</b></td><td><b>最后修改时间</b></td><td><b>初值类型编号</b></td><td><b>状态</b></td></tr>");
+                    	jQuery("#opertable").append("<tr id='opertitle'><td><b>监测点名称</b></td><td><b>初值一</b></td><td><b>修改</b></td><td><b>初值二</b></td><td><b>修改</b></td><td><b>初值三</b></td><td><b>修改</b></td><td><b>最后修改时间</b></td><td><b>初值类型编号</b></td><td><b>状态</b></td></tr>");
                         jQuery("#opertable").append("<tr><td><a id='"+item.id+"'>"+item.sensor+"</a></td><td>"+item.deviceData0+"</td><td><input size='5' value='"+item.deviceData0+"' class='onlyNum0' onkeyup='this.value=this.value.replace(/[^\\- \\d.]/g,\"\")'  onblur='checkNum(this.value)'/></td><td>"+item.deviceData1+"</td><td><input size='5' value='"+item.deviceData1+"' class='onlyNum1' onkeyup='this.value=this.value.replace(/[^\\- \\d.]/g,\"\")'  onblur='checkNum(this.value)'/></td><td>"+item.deviceData2+"</td><td><input size='5' value='"+item.deviceData2+"' class='onlyNum2' onkeyup='this.value=this.value.replace(/[^\\- \\d.]/g,\"\")'  onblur='checkNum(this.value)'/></td><td><span>"+item.collectingTime+"</span></td><td><span>"+item.getType+"</span></td><td><span>"+item.initSetStatus+"</span></td></tr>");
                     }
                 });
@@ -157,7 +157,7 @@ jQuery(document).ready(function(){
                     }else{
                         if(time == 0){
                             jQuery("#setcode").append("<span style='both:clean;line-height:30px;margin-top:10px'>初值模式：&nbsp;&nbsp;<b>"+ item.setModes+"</b>&nbsp;</span>");
-                        	jQuery("#opertable").append("<tr id='opertitle'><td><b>传感器名称</b></td><td><b>初值一</b></td><td><b>修改</b></td><td><b>初值二</b></td><td><b>修改</b></td><td><b>初值三</b></td><td><b>修改</b></td><td><b>最后修改时间</b></td><td><b>初值类型编号</b></td><td><b>状态</b></td></tr>");
+                        	jQuery("#opertable").append("<tr id='opertitle'><td><b>监测点名称</b></td><td><b>初值一</b></td><td><b>修改</b></td><td><b>初值二</b></td><td><b>修改</b></td><td><b>初值三</b></td><td><b>修改</b></td><td><b>最后修改时间</b></td><td><b>初值类型编号</b></td><td><b>状态</b></td></tr>");
                         }
                         time = item.time;
                         jQuery("#opertable").append("<tr><td><a id='"+item.id+"'>"+item.sensor+"</a></td><td>"+item.deviceData0+"</td><td><input size='5' value='"+item.deviceData0+"' class='onlyNum0' onkeyup='this.value=this.value.replace(/[^\\- \\d.]/g,\"\")'  onblur='checkNum(this.value)'/></td><td>"+item.deviceData1+"</td><td><input size='5' value='"+item.deviceData1+"' class='onlyNum1' onkeyup='this.value=this.value.replace(/[^\\- \\d.]/g,\"\")'  onblur='checkNum(this.value)'/></td><td>"+item.deviceData2+"</td><td><input size='5' value='"+item.deviceData2+"' class='onlyNum2' onkeyup='this.value=this.value.replace(/[^\\- \\d.]/g,\"\")'  onblur='checkNum(this.value)'/></td><td><span>"+item.collectingTime+"</span></td><td><span>"+item.getType+"</span></td><td><span>"+item.initSetStatus+"</span></td></tr>");
@@ -348,11 +348,11 @@ jQuery(document).ready(function(){
 	        return;
 	    }
 	    if(sensorTypeNameForSensorReport == ""){
-	        alert("请选择传感器类型!");
+	        alert("请选择监测项类型!");
 	        return;
 	    }
 	    if(monitorlineidString == ""){
-	        alert("请选择监测线和传感器!");
+	        alert("请选择监测线和监测点!");
 	        return;
 	    }
 
@@ -384,15 +384,15 @@ jQuery(document).ready(function(){
             return;
         }
         if(sensorTypeNameForSensorReport == ""){
-            alert("请选择传感器类型!");
+            alert("请选择监测项类型!");
             return;
         }
         if(monitorlineidString == ""){
-            alert("请选择监测线和传感器!");
+            alert("请选择监测线和监测点!");
             return;
         }
         if(sensoridString == ""){
-            alert("请选择传感器!");
+            alert("请选择监测点!");
             return;
         }
         var url="$!webPath/deviceapp/initialValueSensorReport.htm?sensorid="+sensoridString+"&beginTime="+beginTime+"&endTime="+endTime;
@@ -443,7 +443,7 @@ jQuery(document).ready(function(){
 										<form method="post" name="ListForm" id="ListForm">
 											<div class="ordersear" id="condition" style="height: 180px">
 												<div style="height: 40px">
-													<span style="width: 75px">传感器类型:</span> <span
+													<span style="width: 75px">监测项类型:</span> <span
 														class="ordersel"> <select name="sensorTypeName"
 														id="sensorTypeName">
 															<option value="" selected="selected">请选择</option>
@@ -462,7 +462,7 @@ jQuery(document).ready(function(){
 																selected="selected" #end>$!monitorline.name</option>
 															#end
 													</select>
-													</span> <span>&nbsp;&nbsp;&nbsp;传感器:</span> <span class="ordersel">
+													</span> <span>&nbsp;&nbsp;&nbsp;监测点:</span> <span class="ordersel">
 														<select name="sensorid" id="sensorid">
 															<option value="" selected="selected">请选择</option>
 															#foreach($sensor in $sensors)
@@ -478,9 +478,9 @@ jQuery(document).ready(function(){
 													<span style="width: 75px">时&nbsp;&nbsp;&nbsp;间&nbsp;&nbsp;&nbsp;段:
 													</span><span class="ordersel"> <!-- <input name="beginTime" type="text" id="beginTime" value="$!beginTime" readonly="readonly"/>-->
 														<input name="beginTime" type="text" id="beginTime"
-														value="$!beginTime" />
+														value="$!beginTime" style="height: 22px;" />
 													</span> <span>-</span> <span class="ordersel"> <input
-														name="endTime" type="text" id="endTime" value="$!endTime" />
+														name="endTime" type="text" id="endTime" value="$!endTime" style="height: 22px;" />
 													</span>
 													<script>
                                         jQuery.datetimepicker.setLocale('ch');
@@ -507,7 +507,7 @@ jQuery(document).ready(function(){
 												<div id="initCollectTime" style="height: 40px">
 													<span style="width: 75px">采&nbsp;样&nbsp;次&nbsp;数:</span> <span>
 														<input name="sampleInterval" type="text"
-														id="sampleInterval" value=""
+														id="sampleInterval" value="" style="height: 22px;"
 														onkeyup="this.value=this.value.replace(/[^\d]/g,'')"
 														onblur='checkNum(this.value)' />
 													</span>

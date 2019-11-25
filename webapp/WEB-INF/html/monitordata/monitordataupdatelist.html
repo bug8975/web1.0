@@ -253,7 +253,7 @@ function updateMonitorDatas(){
 									<div class="ordercon">
 										<form method="post" name="ListForm" id="ListForm">
 											<div class="ordersear">
-												<span>传感器类型:</span> <span class="ordersel"> <select
+												<span>监测项类型:</span> <span class="ordersel"> <select
 													name="sensorTypeName" id="sensorTypeName">
 														<option value="" selected="selected">请选择</option>
 														#foreach($sensorType in $sensorTypes)
@@ -270,7 +270,7 @@ function updateMonitorDatas(){
 															#if($!monitorlineid==$!monitorline.id)
 															selected="selected" #end>$!monitorline.name</option> #end
 												</select>
-												</span> <span>&nbsp;&nbsp;&nbsp;传感器:</span> <span class="ordersel">
+												</span> <span>&nbsp;&nbsp;&nbsp;监测点:</span> <span class="ordersel">
 													<select name="sensorid" id="sensorid">
 														<option value="" selected="selected">请选择</option>
 														#foreach($sensor in $sensors)
@@ -280,10 +280,10 @@ function updateMonitorDatas(){
 												</span> <span>&nbsp;&nbsp;&nbsp;时间段:</span> <span class="ordersel">
 													<input name="beginTime" type="text" id="beginTime"
 													value="$!beginTime" readonly="readonly"
-													style="width: 80px;" />
+													style="width: 80px;height: 22px;" />
 												</span> <span>-</span> <span class="ordersel"> <input
 													name="endTime" type="text" id="endTime" value="$!endTime"
-													readonly="readonly" style="width: 80px;" />
+													readonly="readonly" style="width: 80px;height: 22px;" />
 												</span> <span class="orderbtn"> <input name="" type="submit"
 													value="查询" style="cursor: pointer;" />
 												</span>
@@ -293,8 +293,8 @@ function updateMonitorDatas(){
 												<table width="100%" border="0" cellspacing="0"
 													cellpadding="0" id="opertable">
 													<tr id="opertitle">
-														<td width="15%"><b>传感器类型</b></td>
-														<td width="10%"><b>传感器名称</b></td>
+														<td width="15%"><b>监测项类型</b></td>
+														<td width="10%"><b>监测点名称</b></td>
 														<td width="20%"><b>采集时间</b></td>
 														<td width="15%"><b>监测点读数/X(°)</b></td>
 														<td width="15%"><b>即时形变/Y(°)</b></td>

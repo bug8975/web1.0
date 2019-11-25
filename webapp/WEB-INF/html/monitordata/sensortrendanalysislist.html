@@ -234,7 +234,7 @@
 									<div class="ordercon">
 										<form method="post" name="ListForm" id="ListForm">
 											<div class="ordersear">
-												<span>传感器类型:</span> <span class="ordersel"> <select
+												<span>监测项类型:</span> <span class="ordersel"> <select
 													name="sensorTypeName" id="sensorTypeName">
 														<option value="" selected="selected">请选择</option>
 														#foreach($sensorType in $sensorTypes)
@@ -251,7 +251,7 @@
 															#if($!monitorlineid==$!monitorline.id)
 															selected="selected" #end>$!monitorline.name</option> #end
 												</select>
-												</span> <span>&nbsp;传感器:</span> <span class="ordersel"> <select
+												</span> <span>&nbsp;监测点:</span> <span class="ordersel"> <select
 													name="sensorid" id="sensorid">
 														<option value="" selected="selected">请选择</option>
 														#foreach($sensor in $sensors)
@@ -260,10 +260,10 @@
 												</select>
 												</span> <span>&nbsp;&nbsp;开始时间:</span> <span class="ordersel">
 													<input type="text" name="beginTime" id="beginTime"
-													value="$!beginTime" style="width: 105px;" /> <!-- <input type="text" value="" name="datetimepicker" id="datetimepicker"/>-->
+													value="$!beginTime" style="width: 105px;height: 22px;" /> <!-- <input type="text" value="" name="datetimepicker" id="datetimepicker"/>-->
 												</span> <span>采样时间:</span> <span class="ordersel"> <input
 													type="text" name="endTime" id="endTime" value="$!endTime"
-													style="width: 105px;" />
+													style="width: 105px;height: 22px;" />
 												</span>
 												<script>
                             jQuery.datetimepicker.setLocale('ch');
@@ -361,8 +361,8 @@
 												<table width="1039" border="0" cellspacing="0"
 													cellpadding="0" id="opertable">
 													<tr id="opertitle">
-														<td width="15%"><b>传感器类型</b></td>
-														<td width="11%"><b>传感器名称</b></td>
+														<td width="15%"><b>监测项类型</b></td>
+														<td width="11%"><b>监测点名称</b></td>
 														<td width="15%"><b>起始时间</b></td>
 														<td width="11%"><b>起始值</b></td>
 														<td width="15%"><b>采样时间</b></td>

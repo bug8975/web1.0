@@ -254,7 +254,7 @@ function dateFormat(timeMs, format){
 function generateSinkingDataLine(){
 	var sensorTypeName = document.getElementById("sensorTypeName").value;
 	if(sensorTypeName == ""){
-		alert("请选择传感器类型和监测线!");
+		alert("请选择监测项类型和监测线!");
 		return;
 	}
 	var monitorlineid = document.getElementById("monitorlineid").value;
@@ -271,7 +271,7 @@ function generateSinkingDataLine(){
 function createDataLine(){
     var sensorTypeName = document.getElementById("sensorTypeName").value;
     if(sensorTypeName == ""){
-        alert("请选择传感器类型和监测线!");
+        alert("请选择监测项类型和监测线!");
         return;
     }
     
@@ -453,7 +453,7 @@ function delCookie(name)
 											<div class="ordercon">
 												<form method="post" name="ListForm" id="ListForm">
 													<div class="ordersear">
-														<span>传感器类型:</span> <span class="ordersel"> <select
+														<span>监测项类型:</span> <span class="ordersel"> <select
 															name="sensorTypeName" id="sensorTypeName">
 																<option value="" selected="selected">请选择</option>
 																#foreach($sensorType in $sensorTypes)

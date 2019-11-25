@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import org.nutz.json.Json;
 import org.nutz.json.JsonFormat;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -422,4 +424,130 @@ public class Dashboard {
 		strBuffer.append(data);
 		strBuffer.append("]");
 	}
+
+
+	//累计形变多曲线
+
+	@SuppressWarnings("unchecked")
+	@RequestMapping({ "/getdatamultiline.htm" })
+	public void getSingleDataLine(HttpServletRequest request, HttpServletResponse response, HttpSession session,
+			String sensorTypeName, String monitorlineid, String beginTime, String endTime, String AxialDirection) {
+		
+		Map map = new HashMap();
+
+		// set query condition to front page back
+		map.put("sensorTypeName", sensorTypeName);
+		map.put("monitorlineid", monitorlineid);
+		map.put("beginTime", beginTime);
+		map.put("endTime", endTime);
+		map.put("direction", AxialDirection);
+
+		// for condition selecting
+		List<SensorType> sensorTypes = this.sensorTypeService.query("select obj from SensorType obj where obj.usingStatus = 0", null);
+		map.put("sensorTypes", sensorTypes);
+		if(null != sensorTypeName && !sensorTypeName.isEmpty()){
+			List<MonitorLine> monitorLines = this.monitorLineService.query("select obj from MonitorLine obj where obj.sensorType='"+sensorTypeName+"'", null, -1, -1);
+			map.put("monitorLines", monitorLines);
+		}
+		// for condition selecting
+		if(null != monitorlineid && !monitorlineid.isEmpty()){
+			List list = new ArrayList();
+
+			String his_beginTime = (String) session.getAttribute("beginTime");
+			String his_endTime = (String) session.getAttribute("endTime");
+			String his_monitorlineid = (String)session.getAttribute("monitorlineid");
+			if(beginTime.equals(his_beginTime) && endTime.equals(his_endTime) && monitorlineid.equals(his_monitorlineid)){
+				String sinkingData = (String) session.getAttribute("sinkingData");
+				String xdata = (String) session.getAttribute("xdata");
+				String zdata = (String) session.getAttribute("zdata");
+				String sensorType = (String) session.getAttribute("sensorType");
+				String unit = (String) session.getAttribute("unit");
+				String sensorName = (String) session.getAttribute("sensorName");
+				list = (ArrayList) session.getAttribute("datas");
+
+
+				map.put("sinkingData", sinkingData); 	// SinkingData/Y
+				map.put("xdata", xdata); 				// DeviceData/X
+				map.put("zdata", zdata); 				// SinkingAccumulation/Z
+				map.put("sensorType",sensorType);
+				map.put("unit", unit);
+				map.put("hasData", true);
+
+				session.setAttribute("sinkingData", sinkingData); 	// SinkingData/Y
+				session.setAttribute("xdata", xdata); 				// DeviceData/X
+				session.setAttribute("zdata", zdata); 				// SinkingAccumulation/Z
+				session.setAttribute("sensorType",sensorType);
+				session.setAttribute("unit", unit);
+				session.setAttribute("sensorName", sensorName);
+				session.setAttribute("hasData", true);
+				session.setAttribute("datas",list);
+
+				session.setAttribute("beginTime", beginTime);
+				session.setAttribute("endTime", endTime);
+				session.setAttribute("monitorlineid",monitorlineid);
+
+				map.put("datas", list);
+				map.put("size", list.size());
+			}else{
+				List<Sensor> sensors = this.sensorService.query("select obj from Sensor obj where obj.base=false and obj.monitorLine.id="+monitorlineid, null, -1, -1);
+				map.put("sensors", sensors);
+				for(Sensor ss:sensors){
+					long sensorIdLong = ss.getId();
+					Sensor sensor = this.sensorService.getObjById(sensorIdLong);
+					SensorType sensorType = this.sensorTypeService.getObjByName(sensor.getSensorType());
+					String[] monitorDatas = getSensorMonitorDataWithString(sensorIdLong, beginTime, endTime);
+					Map map1 = new HashMap();
+					if(null != monitorDatas){
+						map1.put("sinkingData", monitorDatas[0]); // SinkingData/Y
+						map1.put("xdata", monitorDatas[1]); // DeviceData/X
+						map1.put("zdata", monitorDatas[2]); // SinkingAccumulation/Z
+						map1.put("sensorType", sensorType.getDisplayName());
+						map1.put("unit", sensorType.getUnit());
+						map1.put("sensorName", sensor.getName());
+
+						map.put("sinkingData", monitorDatas[0]); // SinkingData/Y
+						map.put("xdata", monitorDatas[1]); // DeviceData/X
+						map.put("zdata", monitorDatas[2]); // SinkingAccumulation/Z
+						map.put("sensorType", sensorType.getDisplayName());
+						map.put("unit", sensorType.getUnit());
+						map.put("hasData", true);
+						map1.put("hasData", true);
+						list.add(map1);
+
+						session.setAttribute("sinkingData", monitorDatas[0]); // SinkingData/Y
+						session.setAttribute("xdata", monitorDatas[1]); // DeviceData/X
+						session.setAttribute("zdata", monitorDatas[2]); // SinkingAccumulation/Z
+						session.setAttribute("sensorType", sensorType.getDisplayName());
+						session.setAttribute("unit", sensorType.getUnit());
+						session.setAttribute("sensorName", sensor.getName());
+						session.setAttribute("hasData", true);
+					} else {
+						map.put("hasData", false);
+						map.put(Globals.WEB_RESULTCODE, Globals.WEB_RESULTCODE_NODATA);
+						map.put(Globals.WEB_RESULTSTRING, Globals.WEB_RESULTSTRING_NODATA);
+					}
+				}
+				session.setAttribute("beginTime", beginTime);
+				session.setAttribute("endTime", endTime);
+				session.setAttribute("monitorlineid",monitorlineid);
+				map.put("datas", list);
+				session.setAttribute("datas",list);
+				map.put("size", list.size());
+			}
+		}
+        
+        Gson gs = new Gson();
+        String jsonString = gs.toJson(map);
+
+        response.setContentType("text/plain");
+        response.setHeader("Cache-Control", "no-cache");
+        response.setCharacterEncoding("UTF-8");
+        try {
+            PrintWriter writer = response.getWriter();
+            writer.print(jsonString);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+	}
+
 }

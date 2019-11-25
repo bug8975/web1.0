@@ -97,7 +97,7 @@ jQuery(document).ready(function(){
                 var time = 0;
                 jQuery.each(data, function(index,item){
                     if(time == 0){
-                    	jQuery("#opertable").append("<tr id='opertitle'><td><b>传感器名称</b></td><td><b>传感器系数</b></td><td><b>本次调整系数</b></td><td><b>最后修改时间</b></td><td><b>首次修改时间</b></td></tr>");
+                    	jQuery("#opertable").append("<tr id='opertitle'><td><b>监测点名称</b></td><td><b>监测点系数</b></td><td><b>本次调整系数</b></td><td><b>最后修改时间</b></td><td><b>首次修改时间</b></td></tr>");
                     }
                     time = item.time;
                     jQuery("#opertable").append("<tr><td><a id='"+item.id+"'>"+item.sensor+"</a></td><td>"+item.sumData+"</td><td><input size='5' value='0' class='onlyNum' onkeyup='this.value=this.value.replace(/[^\\- \\d.]/g,\"\")'  onblur='checkNum(this.value)'/></td><td><span>"+item.modifyTime+"</span></td><td><span>"+item.first_modifyTime+"</span></td></tr>");
@@ -123,7 +123,7 @@ jQuery(document).ready(function(){
             jQuery.post("$!webPath/deviceapp/load_sumData.htm",{"monitorlineid":id,"sensorid":id},function(data){
             	jQuery("#opertable").empty();
                 jQuery.each(data, function(index,item){
-                	jQuery("#opertable").append("<tr id='opertitle'><td><b>传感器名称</b></td><td><b>传感器系数</b></td><td><b>本次调整系数</b></td><td><b>最后修改时间</b></td><td><b>首次修改时间</b></td></tr>");
+                	jQuery("#opertable").append("<tr id='opertitle'><td><b>监测点名称</b></td><td><b>监测点系数</b></td><td><b>本次调整系数</b></td><td><b>最后修改时间</b></td><td><b>首次修改时间</b></td></tr>");
                     jQuery("#opertable").append("<tr><td><a id='"+item.id+"'>"+item.sensor+"</a></td><td>"+item.sumData+"</td><td><input size='5' value='0' class='onlyNum' onkeyup='this.value=this.value.replace(/[^\\- \\d.]/g,\"\")'  onblur='checkNum(this.value)'/></td><td><span>"+item.modifyTime+"</span></td><td><span>"+item.first_modifyTime+"</span></td></tr>");
                 });
             },"json");
@@ -138,7 +138,7 @@ jQuery(document).ready(function(){
                 var time = 0;
                 jQuery.each(data, function(index,item){
                     if(time == 0){
-                        jQuery("#opertable").append("<tr id='opertitle'><td><b>传感器名称</b></td><td><b>传感器系数</b></td><td><b>本次调整系数</b></td><td><b>最后修改时间</b></td><td><b>首次修改时间</b></td></tr>");
+                        jQuery("#opertable").append("<tr id='opertitle'><td><b>监测点名称</b></td><td><b>监测点系数</b></td><td><b>本次调整系数</b></td><td><b>最后修改时间</b></td><td><b>首次修改时间</b></td></tr>");
                     }
                     time = item.time;
                     jQuery("#opertable").append("<tr><td><a id='"+item.id+"'>"+item.sensor+"</a></td><td>"+item.sumData+"</td><td><input size='5' value='0' class='onlyNum' onkeyup='this.value=this.value.replace(/[^\\- \\d.]/g,\"\")'  onblur='checkNum(this.value)'/></td><td><span>"+item.modifyTime+"</span></td><td><span>"+item.first_modifyTime+"</span></td></tr>");
@@ -247,11 +247,11 @@ jQuery(document).ready(function(){
 	        return;
 	    }
 	    if(sensorTypeNameForSensorReport == ""){
-	        alert("请选择传感器类型!");
+	        alert("请选择监测项类型!");
 	        return;
 	    }
 	    if(monitorlineidString == ""){
-	        alert("请选择监测线和传感器!");
+	        alert("请选择监测线和监测点!");
 	        return;
 	    }
 
@@ -283,15 +283,15 @@ jQuery(document).ready(function(){
             return;
         }
         if(sensorTypeNameForSensorReport == ""){
-            alert("请选择传感器类型!");
+            alert("请选择监测项类型!");
             return;
         }
         if(monitorlineidString == ""){
-            alert("请选择监测线和传感器!");
+            alert("请选择监测线和监测点!");
             return;
         }
         if(sensoridString == ""){
-            alert("请选择传感器!");
+            alert("请选择监测点!");
             return;
         }
         var url="$!webPath/picreport/accumulativeSensorReport.htm?sensorid="+sensoridString+"&beginTime="+beginTime+"&endTime="+endTime;
@@ -330,7 +330,7 @@ jQuery(document).ready(function(){
 										<form method="post" name="ListForm" id="ListForm">
 											<div class="ordersear">
 												<div style="height: 40px">
-													<span>传感器类型:</span> <span class="ordersel"> <select
+													<span>监测项类型:</span> <span class="ordersel"> <select
 														name="sensorTypeName" id="sensorTypeName">
 															<option value="" selected="selected">请选择</option>
 															#foreach($sensorType in $sensorTypes)
@@ -348,7 +348,7 @@ jQuery(document).ready(function(){
 																selected="selected" #end>$!monitorline.name</option>
 															#end
 													</select>
-													</span> <span>&nbsp;&nbsp;&nbsp;传感器:</span> <span class="ordersel">
+													</span> <span>&nbsp;&nbsp;&nbsp;监测点:</span> <span class="ordersel">
 														<select name="sensorid" id="sensorid">
 															<option value="" selected="selected">请选择</option>
 															#foreach($sensor in $sensors)

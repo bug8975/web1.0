@@ -179,7 +179,7 @@
 									<div class="ordercon">
 										<form method="post" name="ListForm" id="ListForm">
 											<div class="ordersear">
-												<span>传感器类型:</span> <span class="ordersel"> <select
+												<span>监测项类型:</span> <span class="ordersel"> <select
 													name="sensorTypeName" id="sensorTypeName">
 														<option value="" selected="selected">请选择</option>
 														#foreach($sensorType in $sensorTypes)
@@ -196,7 +196,7 @@
 															#if($!monitorlineid==$!monitorline.id)
 															selected="selected" #end>$!monitorline.name</option> #end
 												</select>
-												</span> <span>&nbsp;&nbsp;&nbsp;传感器:</span> <span class="ordersel">
+												</span> <span>&nbsp;&nbsp;&nbsp;监测点:</span> <span class="ordersel">
 													<select name="sensorid" id="sensorid">
 														<option value="" selected="selected">请选择</option>
 														#foreach($sensor in $sensors)
@@ -224,8 +224,8 @@
 												<table width="100%" border="0" cellspacing="0"
 													cellpadding="0" id="opertable">
 													<tr id="opertitle">
-														<td width="15%"><b>传感器类型</b></td>
-														<td width="10%"><b>传感器名称</b></td>
+														<td width="15%"><b>监测项类型</b></td>
+														<td width="10%"><b>监测点名称</b></td>
 														<td width="20%"><b>采集时间</b></td>
 														<td width="12%"><b>监测点读数/X(°)</b></td>
 														<td width="12%"><b>即时形变/Y(°)</b></td>

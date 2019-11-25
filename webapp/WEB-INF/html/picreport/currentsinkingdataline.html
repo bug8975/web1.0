@@ -224,17 +224,17 @@ jQuery(document).ready(function(){
 function generateSinkingDataLine(){
 	var sensorTypeName = document.getElementById("sensorTypeName").value;
 	if(sensorTypeName == ""){
-		alert("请选择传感器类型，监测线和传感器!");
+		alert("请选择监测项类型，监测线和监测点!");
 		return;
 	}
 	var monitorlineid = document.getElementById("monitorlineid").value;
 	if(monitorlineid == ""){
-		alert("请选择监测线和传感器!");
+		alert("请选择监测线和监测点!");
 		return;
 	}
 	var sensorid = document.getElementById("sensorid").value;
 	if(sensorid == ""){
-		alert("请选择传感器!");
+		alert("请选择监测点!");
 		return;
 	}
 	var beginTime = document.getElementById("beginTime").value;
@@ -335,7 +335,7 @@ function delCookie(name)
 									<div class="ordercon">
 										<form method="post" name="ListForm" id="ListForm">
 											<div class="ordersear">
-												<span>传感器类型:</span> <span class="ordersel"> <select
+												<span>监测项类型:</span> <span class="ordersel"> <select
 													name="sensorTypeName" id="sensorTypeName">
 														<option value="" selected="selected">请选择</option>
 														#foreach($sensorType in $sensorTypes)
@@ -352,7 +352,7 @@ function delCookie(name)
 															#if($!monitorlineid==$!monitorline.id)
 															selected="selected" #end>$!monitorline.name</option> #end
 												</select>
-												</span> <span>&nbsp;&nbsp;&nbsp;传感器:</span> <span class="ordersel">
+												</span> <span>&nbsp;&nbsp;&nbsp;监测点:</span> <span class="ordersel">
 													<select name="sensorid" id="sensorid">
 														<option value="" selected="selected">请选择</option>
 														#foreach($sensor in $sensors)

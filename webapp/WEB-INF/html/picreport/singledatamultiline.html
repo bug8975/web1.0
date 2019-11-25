@@ -229,12 +229,12 @@ jQuery(document).ready(function(){
 function generateLine(){
 	var sensorTypeName = document.getElementById("sensorTypeName").value;
 	if(sensorTypeName == ""){
-		alert("请选择传感器类型，监测线和传感器!");
+		alert("请选择监测项类型，监测线和监测点!");
 		return;
 	}
 	var monitorlineid = document.getElementById("monitorlineid").value;
 	if(monitorlineid == ""){
-		alert("请选择监测线和传感器!");
+		alert("请选择监测线和监测点!");
 		return;
 	}
 	var beginTime = document.getElementById("beginTime").value;
@@ -365,7 +365,7 @@ function delCookie(name)
 									<div class="ordercon">
 										<form method="post" name="ListForm" id="ListForm">
 											<div class="ordersear">
-												<span>传感器类型:</span> <span class="ordersel"> <select
+												<span>监测项类型:</span> <span class="ordersel"> <select
 													name="sensorTypeName" id="sensorTypeName"
 													onchange="selected()">
 														<option value="" selected="selected">请选择</option>
@@ -386,10 +386,10 @@ function delCookie(name)
 												</span> <span class="px10">&nbsp;&nbsp;&nbsp;时间段:</span> <span
 													class="ordersel"> <input name="beginTime"
 													type="text" id="beginTime" value="$!beginTime"
-													readonly="readonly" style="width: 80px;" />
+													readonly="readonly" style="width: 80px;height: 22px;" />
 												</span> <span>-</span> <span class="ordersel"> <input
 													name="endTime" type="text" id="endTime" value="$!endTime"
-													readonly="readonly" style="width: 80px;" />
+													readonly="readonly" style="width: 80px;height: 22px;" />
 												</span> <span style="display: none" id="AxialDirectionSpan">
 													<span>轴向选择:</span><span class="ordersel"> <select
 														name="AxialDirection" id="AxialDirection">
